@@ -6,7 +6,7 @@ Fully backup & restore your KVM Virtual Machines
 ## `virt-backup` Features:
 
 * Ability to backup all the VM's disks or only system disk
-* compress  the backup in a ZIP file, which helps to decrease backup size
+* compress the backup *directly* in a ZIP file, which helps to decrease backup size
 * validate the restore proces with the checksum of the original VM (taken on backup)
 * Ability to backup and restore all the VM's snapshot
 
