@@ -6,9 +6,10 @@ Fully backup & restore your KVM Virtual Machines
 ## `virt-backup` Features:
 
 * Ability to backup all the VM's disks or only system disk
-* compress the backup *directly* in a ZIP file, which helps to decrease backup size
+* compress the backup **directly** in a ZIP file, which helps to decrease backup size
 * validate the restore proces with the checksum of the original VM (taken on backup)
 * Ability to backup and restore all the VM's snapshot
+
 
 ---
 
@@ -65,7 +66,7 @@ ruby virt-backup.rb --backup \
 ![](https://i.imgur.com/Y6XEYTI.png)
 
 **Notice the difference in size**
-> the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :full_moon_with_face
+> the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :full_moon_with_face:
 
 ![](https://i.imgur.com/8amolTB.png)
 
