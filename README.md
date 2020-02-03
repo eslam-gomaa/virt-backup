@@ -1,5 +1,5 @@
-# virt-backup
-Fully backup & restore your KVM Virtual Machines
+# virt-backup :rocket:
+Fully backup & restore your KVM Virtual Machines 
 
 ---
 
@@ -65,7 +65,7 @@ ruby virt-backup.rb --backup \
 ![](https://i.imgur.com/Y6XEYTI.png)
 
 **Notice the difference in size**
-> the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :smile:
+> the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :full_moon_with_face
 
 ![](https://i.imgur.com/8amolTB.png)
 
