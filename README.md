@@ -131,6 +131,13 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 
 ---
 
+### To be added (for now)
+
+* Description for the methods used inside the code
+
+
+---
+
 Thank you
 
 Eslam Gomaa
