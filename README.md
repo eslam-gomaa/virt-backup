@@ -94,7 +94,7 @@ rm /var/lib/libvirt/images/kubernetes-master* -rf
 
 * Now you can start the restored VM
 
-[](https://i.imgur.com/g1LAyHu.png)
+![](https://i.imgur.com/g1LAyHu.png)
 
 * It might fail to restore the Snapshots if the VM is NOT running, don't worry **you'll find the snapshots XML files in the restore dir** you've specified, simply execute the following command against all the snapshot XML files
 
@@ -102,5 +102,5 @@ rm /var/lib/libvirt/images/kubernetes-master* -rf
 virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 ```
 
-[](https://i.imgur.com/OcMSmgj.png)
+![](https://i.imgur.com/OcMSmgj.png)
 
