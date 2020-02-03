@@ -29,7 +29,7 @@ ruby virt-backup.rb --backup \
  --save-dir /var/lib/libvirt/images/backup/
 ```
 
-* Backup a VM with only system disk disks
+* Backup a VM with only system disk
 
 ```bash
 ruby virt-backup.rb --backup \
@@ -62,31 +62,30 @@ ruby virt-backup.rb --backup \
  --save-dir /var/lib/libvirt/images/backup/
 ```
 
-* Delete the VM
+![](https://i.imgur.com/Y6XEYTI.png)
 
+**Notice the difference in size**
+> the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :smile:
+
+![](https://i.imgur.com/8amolTB.png)
+
+
+* Delete the VM
+```bash
+virsh destroy kubernetes-master
+virsh snapshot-list kubernetes-master
+virsh snapshot-delete  kubernetes-master random
+virsh snapshot-delete  kubernetes-master snapshot1
+virsh snapshot-delete  kubernetes-master snapshot2
+virsh undefine kubernetes-master
+
+rm /var/lib/libvirt/images/kubernetes-master* -rf
+```
+
+![](https://i.imgur.com/i1zlitL.png)
 
 
 * Restore the VM
-
-
-
-
-
-
-
-![WeFP3Uj](Images/20200203221016989_14716.png)
-
-
-![](https://i.imgur.com/Q2nZkyd.png)
-
-
-![](https://i.imgur.com/UhfiMiq.png)
-
-
-
-
-
-
 
 
 
