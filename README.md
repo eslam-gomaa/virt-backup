@@ -71,7 +71,7 @@ ruby virt-backup.rb --backup \
 ![](https://i.imgur.com/8amolTB.png)
 
 
-* Delete the VM
+* Delete the Original VM
 ```bash
 virsh destroy kubernetes-master
 virsh snapshot-list kubernetes-master
