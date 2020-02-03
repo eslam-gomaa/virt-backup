@@ -22,7 +22,7 @@ Fully backup & restore your KVM Virtual Machines
 ```bash
 yum install ruby
 ```
-> Or
+> OR
 ```bash
 apt-get install ruby
 ```
