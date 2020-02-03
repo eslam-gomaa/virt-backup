@@ -17,6 +17,31 @@ Fully backup & restore your KVM Virtual Machines
 
 ## Install
 
+* Just install the gems used and you're good to go
+
+```bash
+yum install ruby
+```
+> Or
+```bash
+apt-get install ruby
+```
+
+```bash
+gem install rubysl-tempfile
+gem install rubysl-optparse
+gem install xmlrpc
+gem install open4
+gem install OptionParser
+gem install zip
+```
+
+```bash
+git clone https://github.com/Eslam-Naser/virt-backup.git
+cd virt-backup
+ruby virt-backup.rb --help
+```
+
 ---
 
 ## Examples
