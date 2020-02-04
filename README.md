@@ -138,6 +138,7 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 ### To be added (for now)
 
 * Description for the methods used inside the code
+* Do more tests to `--with-snapshot` to eliminate any warning
 
 
 ---
