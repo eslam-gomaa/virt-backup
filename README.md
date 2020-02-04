@@ -80,7 +80,19 @@ ruby virt-backup.rb --restore \
  --restore-dir /var/lib/libvirt/images/backup/
 ```
 
-### Example screesh shoots
+## Example screesh shoots
+
+
+
+#### Simple backup & restore
+
+![](https://i.imgur.com/SB6FD3p.png)
+
+![](https://i.imgur.com/69ZwK6K.png)
+
+---
+
+#### Fully backup the VM
 
 * Backup a VM
 ```bash
@@ -132,15 +144,6 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 ```
 
 ![](https://i.imgur.com/OcMSmgj.png)
-
----
-
-
-### Another Example of a Simple backup & restore
-
-![](https://i.imgur.com/SB6FD3p.png)
-
-![](https://i.imgur.com/69ZwK6K.png)
 
 ---
 
