@@ -97,6 +97,9 @@ ruby virt-backup.rb --backup \
 
 ![](https://i.imgur.com/8amolTB.png)
 
+> `Note` disk `kubernetes-master-1.img` is NOT part of the VM.
+![](https://i.imgur.com/jlEP1mX.png)
+
 
 * Delete the Original VM
 ```bash
