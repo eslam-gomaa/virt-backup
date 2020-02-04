@@ -135,11 +135,20 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 
 ---
 
+
+### Another Example of a Simple backup & restore
+
+![](https://i.imgur.com/SB6FD3p.png)
+
+![](https://i.imgur.com/69ZwK6K.png)
+
+---
+
+
 ### To be added (for now)
 
 * Description for the methods used inside the code
 * Do more tests to `--with-snapshot` to eliminate any warning
-
 
 ---
 
