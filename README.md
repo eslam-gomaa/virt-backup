@@ -9,7 +9,7 @@ Fully backup & restore your KVM Virtual Machines
 
 * Ability to backup all the VM's disks or only system disk
 * compress the backup **directly** in a ZIP file, which decreases backup size
-* validate the restore proces with the checksum of the original VM (taken on backup)
+* validate the restore process with the checksum of the original VM (taken on backup)
 * Ability to backup and restore all the VM's snapshot
 
 
