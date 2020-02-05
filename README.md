@@ -49,7 +49,7 @@ ruby virt-backup.rb --help
 | `Ubuntu 16.04 LTS` | ✅           |
 | `Centos 7`         | ✅           |
 
-`Note` Ignore the following error as it works normally
+`Note` Ignore the following error on `Centos` as it works normally
 
 > `ERROR:  Error installing xmlrpc:` 
 
