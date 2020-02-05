@@ -42,6 +42,8 @@ cd virt-backup
 ruby virt-backup.rb --help
 ```
 
+---
+
 #### Installation test result
 
 | Distro             | Test Result |
@@ -161,7 +163,7 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 ---
 
 
-### To be added (for now)
+### To be added (for now) 🔨
 
 * Description for the methods used inside the code
 * Do more tests to `--with-snapshot` to eliminate any warning
