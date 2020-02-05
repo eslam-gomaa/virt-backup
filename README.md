@@ -44,10 +44,14 @@ ruby virt-backup.rb --help
 
 #### Installation test result
 
-|                    |                                                              |
-| ------------------ | ------------------------------------------------------------ |
-| `Ubuntu 16.04 LTS` | ✅                                                            |
-| `Centos 7`         | ✅<br />- `ERROR:  Error installing xmlrpc:` Ignore this error as it works normally |
+| Distro             | Test Result |
+| ------------------ | ----------- |
+| `Ubuntu 16.04 LTS` | ✅           |
+| `Centos 7`         | ✅           |
+
+`Note` Ignore the following error as it works normally
+
+> `ERROR:  Error installing xmlrpc:` 
 
 
 
