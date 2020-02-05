@@ -17,7 +17,7 @@ Fully backup & restore your KVM Virtual Machines
 
 ## Install
 
-* Just install the gems used and you're good to go
+* Just install the gems used and you're good to go (Assuming that you have KVM installed)
 
 ```bash
 yum install -y ruby
