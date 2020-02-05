@@ -20,11 +20,11 @@ Fully backup & restore your KVM Virtual Machines
 * Just install the gems used and you're good to go
 
 ```bash
-yum install ruby
+yum install -y ruby
 ```
 > OR
 ```bash
-apt-get install ruby
+apt-get install -y ruby
 ```
 
 ```bash
