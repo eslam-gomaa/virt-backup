@@ -167,6 +167,8 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 
 * Description for the methods used inside the code
 * Do more tests to `--with-snapshot` to eliminate any warning
+* Check md5 for when backing up as well
+* If md5 mismatch found, print where is the difference
 
 ---
 
