@@ -172,8 +172,8 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 
 ### Updates & Fixes
 
-* If md5 mismatch found, print where is the difference => [ Done 👍  ]
-* Puase the VM before collecting the checksum [ Done 👍  ]
+* If md5 mismatch found, print where is the difference => 🔧 👍 
+* Puase the VM before collecting the checksum => 🔧 👍
 
 ---
 
