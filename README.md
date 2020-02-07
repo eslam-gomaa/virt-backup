@@ -8,8 +8,8 @@ Fully backup & restore your KVM Virtual Machines
 ## `virt-backup` Features:
 
 * Ability to backup all the VM's disks or only system disk
-* compress the backup **directly** in a ZIP file, which helps to decrease backup size
-* validate the restore proces with the checksum of the original VM (taken on backup)
+* compress the backup **directly** in a ZIP file, which decreases backup size
+* validate the restore process with the checksum of the original VM (taken on backup)
 * Ability to backup and restore all the VM's snapshot
 
 
@@ -17,14 +17,14 @@ Fully backup & restore your KVM Virtual Machines
 
 ## Install
 
-* Just install the gems used and you're good to go
+* Just install the gems used and you're good to go *(Assuming that you have KVM installed)*
 
 ```bash
-yum install ruby
+yum install -y ruby
 ```
-> Or
+> OR
 ```bash
-apt-get install ruby
+apt-get install -y ruby
 ```
 
 ```bash
@@ -41,6 +41,21 @@ git clone https://github.com/Eslam-Naser/virt-backup.git
 cd virt-backup
 ruby virt-backup.rb --help
 ```
+
+---
+
+#### Installation test result
+
+| Distro             | Test Result |
+| ------------------ | ----------- |
+| `Ubuntu 16.04 LTS` | ✅           |
+| `Centos 7`         | ✅           |
+
+`Note` Ignore the following error on `Centos` as it works normally
+
+> `ERROR:  Error installing xmlrpc:` 
+
+
 
 ---
 
@@ -80,7 +95,19 @@ ruby virt-backup.rb --restore \
  --restore-dir /var/lib/libvirt/images/backup/
 ```
 
-### Example screesh shoots
+## Example screesh shoots
+
+
+
+#### Simple backup & restore
+
+![](https://i.imgur.com/SB6FD3p.png)
+
+![](https://i.imgur.com/69ZwK6K.png)
+
+---
+
+#### Fully backup the VM
 
 * Backup a VM
 ```bash
@@ -96,6 +123,10 @@ ruby virt-backup.rb --backup \
 > the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :full_moon_with_face:
 
 ![](https://i.imgur.com/8amolTB.png)
+
+> `Note` disk `kubernetes-master-2.img` is NOT part of the VM.
+
+![](https://i.imgur.com/jlEP1mX.png)
 
 
 * Delete the Original VM
@@ -128,4 +159,21 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 ```
 
 ![](https://i.imgur.com/OcMSmgj.png)
+
+---
+
+
+### To be added (for now) 🔨
+
+* Description for the methods used inside the code
+* Do more tests to `--with-snapshot` to eliminate any warning
+* Check md5 when backing up as well
+* If md5 mismatch found, print where is the difference
+* use `--force` to skip rolling back in case of md5 mismatch
+
+---
+
+Thank you
+
+Eslam Gomaa
 
