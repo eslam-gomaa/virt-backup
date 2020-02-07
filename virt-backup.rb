@@ -199,7 +199,7 @@ if options[:backup]
     # puts "vm is paused"
   else
     puts "[ Warning ] VM must be in a 'shut off', 'paused' or 'running' state, Aborting"
-    puts "\t\s => Current VM state:#{vm_state?(options[:original_vm])}"
+    puts "\t\s => Current VM state: " + "#{vm_state?(options[:original_vm])}".red
     exit(1)
   end
 end
@@ -315,7 +315,7 @@ def snapshots_list(vm)
       puts "=> #{$err}"
     end
     if $out.length == 0
-      STDERR.puts "[ Warning ] No Snapshots Found for #{vm}"
+      STDERR.puts "[ INFO ] No Snapshots Found for (#{vm})"
     else
       $snapshots_list = $out.to_s.gsub!("+-","").gsub!("|","").gsub!("\n","").split("\s")
     end
@@ -360,6 +360,13 @@ end
 $options = options
 def backup(vm)
 
+  zip_file = "#{$options[:save_dir]}/#{vm}.zip"
+  if File.file?(zip_file)
+    puts
+    puts "[ INFO ] A backup file with the same name already exists, choose another directory"
+    exit(1)
+  end
+
   #p vm_info(vm)
   # Throw a warning if there are missing disks for the VM's (specified in the XML file but NOT exist)
   if vm_info(vm)[:disks_missing_number] > 0
@@ -388,6 +395,25 @@ def backup(vm)
   end
 
   puts
+  puts "[ INFO ] Current VM State: " + "#{vm_state?($options[:original_vm])}".red
+
+  if vm_state?($options[:original_vm]) == 'running'
+    STDOUT.puts "[ INFO ] Pausing the VM"
+    cmd  = "virsh suspend #{$options[:original_vm]}"
+    status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
+      $err = stderr.read.strip
+      $out = stdout.read.strip
+    end
+    if status.exitstatus == 0
+      true
+    else status.exitstatus > 0
+    STDERR.puts "[ ERROR ] vm: (#{$options[:original_vm]}) Unable to Pause the VM "
+    STDERR.puts "=> #{$err}"
+    exit(1)
+    end
+  end
+  sleep(6)
+
   STDOUT.puts "[ INFO ] Getting checksum of the Files will be backed up - May take time based on size"
   # Check sum of the files that'll be backed-up
   checksum = disks_md5(vm_info(vm)[:disks_exist])
@@ -425,29 +451,11 @@ def backup(vm)
 
   ### backup ###
 
-
-  puts "[ INFO ] Current state VM: #{vm_state?($options[:original_vm])}"
-
-  if vm_state?($options[:original_vm]) == 'running'
-    STDOUT.puts "[ INFO ] Pausing the VM"
-    cmd  = "virsh suspend #{$options[:original_vm]}"
-    status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
-      $err = stderr.read.strip
-      $out = stdout.read.strip
-    end
-    if status.exitstatus == 0
-      true
-    else status.exitstatus > 0
-    STDERR.puts "[ ERROR ] vm: (#{$options[:original_vm]}) Unable to Pause the VM "
-    STDERR.puts "=> #{$err}"
-    exit(1)
-    end
-  end
-  sleep(6)
-
-
   # Add the disk files to the ZIP file
   #
+
+  #if File.file?($options[:options])
+
   if $options[:system_disk_only]
     disks_to_backup = vm_info(vm)[:disks][0].split
   else
@@ -463,7 +471,7 @@ def backup(vm)
   File.open(checksum_dir, 'w') { |f|
     f.puts checksum }
 
-  zip_file = "#{$options[:save_dir]}/#{vm}.zip"
+
   create_zip(zip_file,checksum_dir)
   File.delete(checksum_dir)
 
@@ -501,14 +509,14 @@ def backup(vm)
     exit(1)
     end
     sleep(3)
-    puts "[ INFO ] Current state VM: #{vm_state?($options[:original_vm])}"
+    puts "[ INFO ] Current VM State: " + "#{vm_state?($options[:original_vm])}".red
   end
   $backed_up_file = "#{$options[:save_dir]}/#{vm}.zip"
   puts "[ INFO ] Backup stored successfully in (#{$backed_up_file.gsub("//", "/")})"
 end
 
-
 if options[:backup]
+
   if vm_exists?(options[:original_vm])
     backup(options[:original_vm])
   end
@@ -540,7 +548,7 @@ elsif options[:restore]
     STDERR.puts "[ Error ] No Space Left on the Device - choose a directory with enough space"
     STDERR.puts "\t\s => #{e}"
     STDERR.puts "[ INFO ] Rolling back"
-    #FileUtils.rm_rf($restore_dir)
+    FileUtils.rm_rf($restore_dir)
     exit(1)
   end
 
@@ -570,6 +578,19 @@ elsif options[:restore]
 
   #p checksum_file
 
+  def deep_diff(a, b)
+    (a.keys | b.keys).each_with_object({}) do |k, diff|
+      if a[k] != b[k]
+        if a[k].is_a?(Hash) && b[k].is_a?(Hash)
+          diff[k] = deep_diff(a[k], b[k])
+        else
+          diff[k] = [a[k], b[k]]
+        end
+      end
+      diff
+    end
+  end
+
   $checksum_f = checksum_file
   def compare_md5(old_hash, restored_hash)
     # compare 2 Hashes
@@ -586,6 +607,8 @@ elsif options[:restore]
         puts "[ INFO ] MD5 check is OK :)"
       else
         STDERR.puts "[ Error ] Found checksum mismatch between backup and restored files"
+        difference = deep_diff(old_hash_r, restored_hash_r)
+        puts "\t\s => Difference: #{difference.to_s.red}"
         STDERR.puts "[ INFO ] Rolling back"
         FileUtils.rm_rf($restore_dir)
         exit(1)
@@ -686,7 +709,6 @@ elsif options[:restore]
   #puts "[ INFO ] Updating disks location with the restored dir"
 
   if restored_disks.length <= 1
-    puts "[ INFO ] Only primary disk detected"
     restored_xml_disks_p_disk = vm_info_restored(vm_xml[0])[:disks][0]
     new_disk_locaiton = "#{$restore_dir}/#{File.basename(restored_xml_disks_p_disk)}".gsub("//", "/")
 
@@ -717,7 +739,7 @@ elsif options[:restore]
   if vm_exists_?($vm_name) == false
     run_restored_vm(vm_xml[0])
   else
-    puts "[ INFO ] VM: #{$vm_name} already exists - Skip defining the VM"
+    puts "[ INFO ] VM: (#{$vm_name}) already exists - Skip defining the VM"
   end
 
   #p snapshots_list($vm_name)
