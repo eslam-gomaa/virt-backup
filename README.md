@@ -48,8 +48,8 @@ ruby virt-backup.rb --help
 
 | Distro             | Test Result |
 | ------------------ | ----------- |
-| `Ubuntu 16.04 LTS` | ✅           |
-| `Centos 7`         | ✅           |
+| `Ubuntu 16.04 LTS` | ✔️           |
+| `Centos 7`         | ✔️           |
 
 `Note` Ignore the following error on `Centos` as it works normally
 
@@ -172,8 +172,8 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 
 ### Updates & Fixes
 
-* If md5 mismatch found, print where is the difference => 👌🏻
-* Puase the VM before collecting the checksum => 👌🏻
+* If md5 mismatch found, print where is the difference ✔️
+* Puase the VM before collecting the checksum ✔️
 
 ---
 
