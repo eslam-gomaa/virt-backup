@@ -95,7 +95,7 @@ ruby virt-backup.rb --restore \
  --restore-dir /var/lib/libvirt/images/backup/
 ```
 
-## Example screesh shoots
+## Example screenshoots
 
 
 * Backup a VM
