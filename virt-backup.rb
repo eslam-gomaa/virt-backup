@@ -137,6 +137,14 @@ class String
     colorize(31)
   end
 
+  def pink
+    colorize(35)
+  end
+
+  def light_blue
+    colorize(36)
+  end
+
   def green
     colorize(32)
   end
@@ -199,7 +207,7 @@ if options[:backup]
     # puts "vm is paused"
   else
     puts "[ Warning ] VM must be in a 'shut off', 'paused' or 'running' state, Aborting"
-    puts "\t\s => Current VM state: " + "#{vm_state?(options[:original_vm])}".red
+    puts "\t\s => Current VM state: " + "#{vm_state?(options[:original_vm])}".light_blue
     exit(1)
   end
 end
@@ -262,6 +270,7 @@ end
 
 # Function to backup files in a zip file,
 # ZIP file will be created itf does NOT exist, so the function is to add files to zip file
+
 def create_zip(zip_file, file)
   begin
     Zip::ZipFile.open(zip_file, Zip::ZipFile::CREATE) do |zipfile|
@@ -317,14 +326,15 @@ def snapshots_list(vm)
     if $out.length == 0
       STDERR.puts "[ INFO ] No Snapshots Found for (#{vm})"
     else
-      $snapshots_list = $out.to_s.gsub!("+-","").gsub!("|","").gsub!("\n","").split("\s")
+      $snapshots_list = $out.to_s.gsub!("+-","").gsub!("|","").gsub!("\n","").split(/\s\s/).reject {|s| s.empty?}
+      $snapshots_list_r = $snapshots_list.collect {|s| s.gsub(/^\s/, "")}
     end
   rescue => e
     STDERR.puts "[ Warning ] Could NOT list snapshots"
     STDERR.puts "\t\s\s\s\s => #{e}"
     STDERR.puts "\t\s\s\s\s => #{$err}" if status.exitstatus > 0
   end
-  $snapshots_list
+  $snapshots_list_r
 end
 
 def snapshots_list_restore(vm)
@@ -395,7 +405,7 @@ def backup(vm)
   end
 
   puts
-  puts "[ INFO ] Current VM State: " + "#{vm_state?($options[:original_vm])}".red
+  puts "[ INFO ] Current VM State: " + "#{vm_state?($options[:original_vm])}".pink
 
   if vm_state?($options[:original_vm]) == 'running'
     STDOUT.puts "[ INFO ] Pausing the VM"
@@ -425,9 +435,9 @@ def backup(vm)
   if $options[:with_snapshots]
     if not snapshots_list(vm).nil?
       for snapshot in snapshots_list(vm)
-        $snap_xml_path = "/tmp/#{vm}-#{snapshot}-snap.xml"
-        cmd  = "virsh snapshot-dumpxml #{vm} #{snapshot} > #{$snap_xml_path}"
-
+        #p snapshot.gsub(/\s+/, '-')
+        $snap_xml_path = "/tmp/#{vm}-#{snapshot.gsub(/\s+/, '-')}-snap.xml"
+        cmd  = "virsh snapshot-dumpxml #{vm} '#{snapshot}' > #{$snap_xml_path}"
         status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
           $err = stderr.read.strip
         end
@@ -435,12 +445,11 @@ def backup(vm)
           true
         else
           puts
-          STDERR.puts "[ Error ] could NOT Extract Snap XML (#{snapshot}), check the Error below \n#{'-'.*(55)}"
-          puts
-          puts "=> #{$err}"
+          STDERR.puts "[ Error ] could NOT Extract Snap XML (#{snapshot}), check the Error below" # \n#{'-'.*(55)} # to print ----
+          puts "\t\s => #{$err}"
           exit(1)
         end
-        checksum[:"#{vm}-#{snapshot}-snap.xml".to_s] = file_md5($snap_xml_path).to_s
+        checksum[:"#{vm}-#{snapshot.gsub(/\s+/, '-')}-snap.xml".to_s] = file_md5($snap_xml_path).to_s
         $snapshot_paths << $snap_xml_path
       end
     end
@@ -463,17 +472,16 @@ def backup(vm)
   end
   #p disks_to_backup
 
-
   STDOUT.puts "[ INFO ] Backing up VM: (#{$options[:original_vm]}), N of disks: (#{disks_to_backup.count}) - May take time based on size"
 
   # Create Zip file, & add the "checksum" of the files will be backed up
-  checksum_dir = "/tmp/#{vm}.checksum"
-  File.open(checksum_dir, 'w') { |f|
+  checksum_file = "/tmp/#{vm}.checksum"
+  File.open(checksum_file, 'w') { |f|
     f.puts checksum }
 
 
-  create_zip(zip_file,checksum_dir)
-  File.delete(checksum_dir)
+  create_zip(zip_file,checksum_file)
+  File.delete(checksum_file)
 
   # Add snapshots XML files to the ZIP file
   if $options[:with_snapshots]
@@ -509,7 +517,7 @@ def backup(vm)
     exit(1)
     end
     sleep(3)
-    puts "[ INFO ] Current VM State: " + "#{vm_state?($options[:original_vm])}".red
+    puts "[ INFO ] Current VM State: " + "#{vm_state?($options[:original_vm])}".pink
   end
   $backed_up_file = "#{$options[:save_dir]}/#{vm}.zip"
   puts "[ INFO ] Backup stored successfully in (#{$backed_up_file.gsub("//", "/")})"
@@ -522,7 +530,7 @@ if options[:backup]
   end
 
 elsif options[:restore]
-
+  
   puts
   # Restore
 
@@ -677,8 +685,18 @@ elsif options[:restore]
           puts "\t\s => Snapshot #{snap} defined successfully"
           puts "\t\s => #{$out}"
         else status.exitstatus > 0
+        $snap_status = 1
         STDERR.puts "[ Warning ] Can NOT define Snapshot: (#{File.basename(snap)})"
         STDERR.puts "\t\s => #{$err}".green
+        end
+      end
+      if $snap_status == 1
+        puts "[ INFO ] As a workaround, run the following commands to restore the snapshots"
+        puts "\t\s $ virsh start #{vm} ".light_blue + "  Wait till VM starts;"
+        puts "\t\s $ cd #{$options[:restore_dir]}/#{$vm_name}".gsub("//", "/").light_blue
+
+        for snap_ in snapshot_files
+          puts "\t\s $ virsh snapshot-create #{vm} --xmlfile #{File.basename(snap_)}".light_blue
         end
       end
     end
