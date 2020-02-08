@@ -48,8 +48,8 @@ ruby virt-backup.rb --help
 
 | Distro             | Test Result |
 | ------------------ | ----------- |
-| `Ubuntu 16.04 LTS` | ✅           |
-| `Centos 7`         | ✅           |
+| `Ubuntu 16.04 LTS` | ✔️           |
+| `Centos 7`         | ✔️           |
 
 `Note` Ignore the following error on `Centos` as it works normally
 
@@ -168,8 +168,12 @@ virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
 * Description for the methods used inside the code
 * Do more tests to `--with-snapshot` to eliminate any warning
 * Check md5 when backing up as well
-* If md5 mismatch found, print where is the difference
 * use `--force` to skip rolling back in case of md5 mismatch
+
+### Updates & Fixes
+
+* If md5 mismatch found, print where is the difference ✔️
+* Puase the VM before collecting the checksum ✔️
 
 ---
 
