@@ -1,7 +1,7 @@
 # virt-backup :rocket:
 Fully backup & restore your KVM Virtual Machines 
 
-**Version**  `Beta 1.0` 
+**Version**  `Beta 1.1` 
 
 ---
 
@@ -10,7 +10,7 @@ Fully backup & restore your KVM Virtual Machines
 * Ability to backup all the VM's disks or only system disk
 * compress the backup **directly** in a ZIP file, which decreases backup size
 * validate the restore process with the checksum of the original VM (taken on backup)
-* Ability to backup and restore all the VM's snapshot
+* Ability to backup and restore all the VM's snapshot  --- [ **Expremental** ]
 
 
 ---
@@ -95,70 +95,31 @@ ruby virt-backup.rb --restore \
  --restore-dir /var/lib/libvirt/images/backup/
 ```
 
-## Example screesh shoots
+## Example screenshoots
 
-
-
-#### Simple backup & restore
-
-![](https://i.imgur.com/SB6FD3p.png)
-
-![](https://i.imgur.com/69ZwK6K.png)
-
----
-
-#### Fully backup the VM
 
 * Backup a VM
+
 ```bash
 ruby virt-backup.rb --backup \
  --with-snapshots \
- --original-vm kubernetes-master \
- --save-dir /var/lib/libvirt/images/backup/
+ --original-vm kube-2 \
+ --save-dir /var/lib/libvirt/images/backup-4/
 ```
 
-![](https://i.imgur.com/Y6XEYTI.png)
-
-**Notice the difference in size**
-> the VM's additional 3 disks were created for testing, but compressing `2.5G` to `692M` is not bad :full_moon_with_face:
-
-![](https://i.imgur.com/8amolTB.png)
-
-> `Note` disk `kubernetes-master-2.img` is NOT part of the VM.
-
-![](https://i.imgur.com/jlEP1mX.png)
-
-
-* Delete the Original VM
-```bash
-virsh destroy kubernetes-master
-virsh snapshot-list kubernetes-master
-virsh snapshot-delete  kubernetes-master random
-virsh snapshot-delete  kubernetes-master snapshot1
-virsh snapshot-delete  kubernetes-master snapshot2
-virsh undefine kubernetes-master
-
-rm /var/lib/libvirt/images/kubernetes-master* -rf
-```
-
-![](https://i.imgur.com/i1zlitL.png)
+![](https://i.imgur.com/W8YRsGD.png)
 
 
 * Restore the VM
 
-![](https://i.imgur.com/e9FIu7c.png)
-
-* Now you can start the restored VM
-
-![](https://i.imgur.com/g1LAyHu.png)
-
-* It might fail to restore the Snapshots if the VM is NOT running, don't worry **you'll find the snapshots XML files in the restore dir** you've specified, simply execute the following command against all the snapshot XML files
-
 ```bash
-virsh snapshot-create <VM-NAME> --xmlfile <PATH-TO-SNAPSHOT-XML>
+ruby virt-backup.rb --restore \
+ --with-snapshots \
+ --backup-file /var/lib/libvirt/images/backup-4/kube-2.zip \
+ --restore-dir /var/lib/libvirt/images
 ```
 
-![](https://i.imgur.com/OcMSmgj.png)
+![](https://i.imgur.com/A0JHddH.png)
 
 ---
 
