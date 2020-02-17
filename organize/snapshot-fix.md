@@ -2,7 +2,7 @@
 
 ### Create & Restore snapshots
 
-* The following commands are tested to [ create --> delete then restore ] KVM snapshots
+* The following commands are tested to [ `create` --> `delete` then `restore` ] KVM snapshots
 
 ```bash
 # Create snapshot
