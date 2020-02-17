@@ -121,8 +121,6 @@ if options[:restore]
     STDERR.puts "[ Error ] --restore-dir option must be a directory"
     exit(1)
   end
-
-
 end
 
 
@@ -522,6 +520,9 @@ def backup(vm)
   $backed_up_file = "#{$options[:save_dir]}/#{vm}.zip"
   puts "[ INFO ] Backup stored successfully in (#{$backed_up_file.gsub("//", "/")})"
 end
+
+
+
 
 if options[:backup]
 
