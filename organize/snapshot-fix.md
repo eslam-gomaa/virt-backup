@@ -3,7 +3,6 @@
 ### Create & Restore snapshots
 
 * The following commands are tested to [ `create` --> `move` --> `restore` ] KVM snapshots
-* Next step: Update and test with our code
 
 ```bash
 # Create snapshot
@@ -39,6 +38,8 @@ virsh snapshot-create --domain mv12 --xmlfile /tmp/snap-26.xml
 ## Snapshot restore Worked
 
 * worked with copying the disk and create another VM from it, then restore the snapshots 
+* Next step: Update and test with our code
+
 
 ```bash
 # Create snapshot
