@@ -3,7 +3,7 @@
 ### Create & Restore snapshots
 
 * The following commands are tested to [ `create` --> `move` --> `restore` ] KVM snapshots
-	* Next step: Update and test with our code
+* Next step: Update and test with our code
 
 ```bash
 # Create snapshot
