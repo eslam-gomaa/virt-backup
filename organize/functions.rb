@@ -130,6 +130,59 @@ module Functions
       $snapshots_list_r
     end
 
+    def snapshots_list_type(vm=@vm)
+      begin
+        cmd  = "virsh snapshot-list --domain #{vm} --tree"
+        status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
+          $err = stderr.read.strip
+          $out = stdout.read.strip
+        end
+        if status.exitstatus == 0
+          true
+        else
+          puts
+          STDERR.puts "[ Error ] Could NOT list Snapshots"
+          puts
+          puts "=> #{$err}"
+        end
+        if $out.length == 0
+          STDERR.puts "[ INFO ] No Snapshots Found for (#{vm})"
+        else
+
+          #p $test = $out.to_s.gsub("+-", '').gsub("|","")
+          $snapshots_list = $out.to_s.gsub("+-","").gsub("|","").gsub("\n","").split(/\s\s\s\s/).reject {|s| s.empty?}
+          $snapshots_list_r = $snapshots_list.collect {|s| s.gsub(/^\s/, "")}
+        end
+        $snapshots_list_type = {}
+
+          for s in $snapshots_list_r
+            cmd  = "virsh snapshot-info #{vm} '#{s}'"
+            status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
+              $err = stderr.read.strip
+              $out = stdout.read.strip
+            end
+            if status.exitstatus == 0
+              true
+            else
+              puts
+              STDERR.puts "[ Error ] Could NOT list Snapshots types"
+              puts
+              puts "=> #{$err}"
+            end
+            type = $out.split("\n").grep(/State:/)[0].gsub(/^State:/, '').strip
+            $snapshots_list_type[s] = type
+          end
+
+          #p $snapshots_list_detailed
+
+      rescue => e
+        STDERR.puts "[ Warning ] Could NOT list snapshots"
+        STDERR.puts "\t\s\s\s\s => #{e}"
+        STDERR.puts "\t\s\s\s\s => #{$err}" if status.exitstatus > 0
+      end
+      $snapshots_list_type
+    end
+
   end
 
   class MD5
@@ -269,9 +322,75 @@ module Functions
       info
     end
 
+    def snapshot_info(xml_file)
+      info ={}
+      info[:name] = File.readlines(xml_file).grep(/<name>/)[0].gsub(/<name>/, '').gsub('</name>','').gsub("\n", '').gsub(/^\s+/, '')
+      info[:state] = File.readlines(xml_file).grep(/<state>/)[0].gsub(/<state>/, '').gsub('</state>','').gsub("\n", '').gsub(/^\s+/, '')
+      info[:type] = File.readlines(xml_file).grep(/snapshot=/)[1].gsub(/<disk name=/, '').gsub(/v.[a-z]/, '').gsub(/\s/, '').gsub(/snapshot=/, '').gsub('/>', '').gsub("\n", '').gsub(/^\s+/, '').gsub("'", '')
+      info[:xml] = xml_file
+
+      info
+    end
+
+    def snapshot_list_by_state(xml_files_arr)
+      info    = {}
+      running = []
+      shutoff = []
+      paused  = []
+      for x in xml_files_arr
+
+        snapshot_info(x).collect{|k,v| running << snapshot_info(x) if v == 'running'}
+        snapshot_info(x).collect{|k,v| shutoff << snapshot_info(x) if v == 'shutoff'}
+        snapshot_info(x).collect{|k,v| shutoff << snapshot_info(x) if v == 'paused'}
+      end
+      info[:running] = running
+      info[:shutoff] = shutoff
+      info[:paused]  = paused
+
+      info
+    end
+
+    def snapshot_list_by_type(xml_files_arr)
+      info    = {}
+      internal = []
+      external = []
+      for x in xml_files_arr
+        snapshot_info(x).collect{|k,v| internal << snapshot_info(x) if v == 'internal'}
+        snapshot_info(x).collect{|k,v| external << snapshot_info(x) if v == 'external'}
+      end
+      info[:internal] = internal
+      info[:external] = external
+
+      info
+    end
+
+    def update_snapshot_disk_dir(snapshots_xmls_arr, dir)
+      for xml in snapshots_xmls_arr
+        old_disk_location = File.readlines(xml).grep(/source file=/).collect {|disk| disk.strip.gsub(/source file=/, '').gsub(/<'/,'').gsub("'/>", '')}
+        for old_d in old_disk_location
+          $old_d = old_d
+          $new_disk_location = "#{dir}/#{File.basename(old_d)}".gsub("//", "/")
+        end
+        a =  File.open(xml, 'r')
+        a1 = a.read
+        a.close
+
+        a1.gsub!($old_d,$new_disk_location)
+        File.open(xml,'w') {|file| file << a1}
+      end
+    end
+
     def define_snapshots(vm,snapshot_files)
       if snapshot_files.length > 0
         puts "[ INFO ] Defining the Snapshots"
+
+        for snap in snapshot_files
+          snapshot_info(snap)
+        end
+        shutdown_snapshots = snapshot_info()
+        running_snapshots = ''
+
+
         for snap in snapshot_files
           cmd  = "virsh snapshot-create #{vm} --xmlfile #{snap}"
           status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
@@ -299,7 +418,7 @@ module Functions
       end
     end
 
-    def run_restored_vm(vml_file)
+    def define_restored_vm(vml_file)
       STDOUT.puts "[ INFO ] Defining the restored VM: (#{$vm_name})"
       cmd  = "virsh define #{vml_file}"
       status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
@@ -307,7 +426,7 @@ module Functions
         $out = stdout.read.strip
       end
       if status.exitstatus == 0
-        puts "[ INFO ] VM: #{$vm_name} defined successfully"
+        puts "[ INFO ] VM: (#{$vm_name}) defined successfully"
         puts "\t\s => #{$out}"
       else status.exitstatus > 0
       STDERR.puts "[ ERROR ] Can NOT define the restored VM:  #{$vm_name}"
@@ -317,13 +436,15 @@ module Functions
     end
   end
 
+
+
 ### Examples ###
 
 #vm = VM.new('kube-master-15')
 # p vm.methods
 #p vm.snapshots_list
 #p vm.vm_info
-
+#p vm.snapshots_list_type
 
 #md5 = MD5.new
 #p md5.methods
@@ -335,5 +456,5 @@ module Functions
 #restored = Restored.new
 #  restored.methods
 #  p restored.snapshots_list_restore('kube-master-15')
-
+#p restored.snapshot_info('/root/snap2-s1.xml')
 end
