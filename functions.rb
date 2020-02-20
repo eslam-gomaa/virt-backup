@@ -120,7 +120,7 @@ module Functions
         else
           #p $test = $out.to_s.gsub("+-", '').gsub("|","")
           $snapshots_list = $out.to_s.gsub("+-","").gsub("|","").gsub("\n","").split(/\s\s\s\s/).reject {|s| s.empty?}
-          $snapshots_list_r = $snapshots_list.collect {|s| s.gsub(/^\s/, "")}
+          $snapshots_list_r = $snapshots_list.collect {|s| s.gsub(/^\s/, "").gsub(/^\s\s/, '').gsub(/^\s\s\s/, '').gsub(/^\s/, '').gsub(/^\s\s/, '')}
         end
       rescue => e
         STDERR.puts "[ Warning ] Could NOT list snapshots"
@@ -465,7 +465,7 @@ module Functions
 
 ### Examples ###
 
-#vm = VM.new('snap22')
+#vm = VM.new('snap23')
 # p vm.methods
 #p vm.snapshots_list
 #p vm.vm_info
@@ -482,18 +482,18 @@ module Functions
 
 
 
-  restored = Restored.new
+#  restored = Restored.new
 #  restored.methods
 #  p restored.snapshots_list_restore('kube-master-15')
 #p restored.snapshot_info('/root/snap2-s1.xml')[:parent]
 #p restored.snapshot_info('/root/snap2-s2.xml')
-  xmls = ['/root/xml/snap22-docker-installed-snap.xml',
-          '/root/xml/snap22-snap2-s1-snap.xml',
-          '/root/xml/snap22-test-shutdown-snapshot-snap.xml',
-          '/root/xml/snap22-paused-snapshot-snap.xml',
-          '/root/xml/snap22-snap2-s2-snap.xml']
+#  xmls = ['/root/xml/snap22-docker-installed-snap.xml',
+#          '/root/xml/snap22-snap2-s1-snap.xml',
+#          '/root/xml/snap22-test-shutdown-snapshot-snap.xml',
+#          '/root/xml/snap22-paused-snapshot-snap.xml',
+#          '/root/xml/snap22-snap2-s2-snap.xml']
 
-    #p restored.snapshot_list_by_parent(xmls)
+#p restored.snapshot_list_by_parent(xmls)
 
 
 

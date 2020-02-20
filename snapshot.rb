@@ -24,10 +24,9 @@ module Snapshot
       shutoff = arr.select {|x| x[:state] == 'shutoff'}
       paused  = arr.select {|x| x[:state] == 'paused'}
 
-      need_to_start = running.concat shutoff
-
+      need_to_start = running.concat paused
+      vm_ = VM.new(vm)
       if need_to_start.count > 1
-        vm_ = VM.new(vm)
         puts "[ INFO ] (#{need_to_start.count}) snapshots in RUNNING/PAUSED state detected"
         if vm_.vm_state? == 'shut off'
           puts "[ INFO ] Starting the VM: (#{vm})"
@@ -53,7 +52,6 @@ module Snapshot
 
       # Restore in Order
       for h in hash_order
-        #puts "\t\s => Restoring snapshot: (#{h[:name]}) --> parent: #{h[:parent]}"
         cmd  = "virsh snapshot-create --domain #{vm} #{h[:xml]} --redefine"
         status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
           $err = stderr.read.strip
@@ -66,10 +64,21 @@ module Snapshot
         puts "\t\s => #{$err}"
         end
       end
-
-
+      #last_snap_name = hash_order.last[:name]
+      last_snap_name = vm_.snapshots_list.last
+      puts "[ INFO ] revert to the last snapshot: #{last_snap_name}"
+      cmd  = "virsh snapshot-revert --domain #{vm} --snapshotname '#{last_snap_name}'"
+      status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
+        $err = stderr.read.strip
+        $out = stdout.read.strip
+      end
+      if status.exitstatus == 0
+        puts "\t\s => Snapshot: (#{last_snap_name}) Reverted Successfully"
+      else status.exitstatus > 0
+      STDERR.puts "[ ERROR ] Unable to revert snapshot: (#{last_snap_name})"
+      puts "\t\s => #{$err}"
+      end
     end
-
 
     def restore_external_snapshot
       #puts "[ INFO ] External Snapshots are NOT Supported yet."
