@@ -4,7 +4,6 @@ include Functions
 include Snapshot
 
 require 'open4'
-require 'xmlrpc/parser'
 require 'tempfile'
 require 'optparse'
 require 'fileutils'

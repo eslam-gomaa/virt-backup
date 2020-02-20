@@ -2,7 +2,6 @@ require_relative 'functions'
 include Functions
 
 require 'open4'
-require 'xmlrpc/parser'
 require 'tempfile'
 require 'optparse'
 require 'fileutils'
