@@ -10,7 +10,7 @@ Fully backup & restore your KVM Virtual Machines
 * Ability to backup all the VM's disks or only system disk
 * compress the backup **directly** in a ZIP file, which decreases backup size
 * validate the restore process with the checksum of the original VM (taken on backup)
-* Ability to backup and restore all the VM's snapshot  --- [ **Expremental** ]
+* Ability to backup and restore all the VM's snapshot - [ **Internal Snapshots** ]
 
 
 ---
@@ -30,7 +30,6 @@ apt-get install -y ruby
 ```bash
 gem install rubysl-tempfile
 gem install rubysl-optparse
-
 gem install open4
 gem install OptionParser
 gem install zip
@@ -104,7 +103,7 @@ ruby /root/virt-backup/virt-backup.rb \
   --with-snapshots
 ```
 
-![](Images/msxoiYc.png)
+![](https://i.imgur.com/msxoiYc.png)
 
 
 
@@ -118,22 +117,20 @@ ruby /root/virt-backup/virt-backup.rb \
   --restore-dir /var/lib/libvirt/images
 ```
 
-![Imgur](Images/Uoh7Zpq.png)
+![Imgur](https://i.imgur.com/Uoh7Zpq.png)
 
 
 
 ### To be added (for now) 🔨
 
 * Description for the methods used inside the code
-* Do more tests to `--with-snapshot` to eliminate any warning
-* Check md5 when backing up as well
-* use `--force` to skip rolling back in case of md5 mismatch
 
 ### Updates & Fixes
 
 * If md5 mismatch found, print where is the difference ✔️
 * Pause the VM before collecting the checksum ✔️
 * Fix: Error if snapshot name has a space ✔️
+* Fix: Restore snapshot --> stable now 
 
 ---
 
