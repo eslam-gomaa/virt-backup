@@ -30,7 +30,7 @@ apt-get install -y ruby
 ```bash
 gem install rubysl-tempfile
 gem install rubysl-optparse
-gem install xmlrpc
+
 gem install open4
 gem install OptionParser
 gem install zip
@@ -50,11 +50,6 @@ ruby virt-backup.rb --help
 | ------------------ | ----------- |
 | `Ubuntu 16.04 LTS` | ✔️           |
 | `Centos 7`         | ✔️           |
-
-`Note` Ignore the following error on `Centos` as it works normally
-
-> `ERROR:  Error installing xmlrpc:` 
-
 
 
 ---
@@ -98,30 +93,33 @@ ruby virt-backup.rb --restore \
 ## Example screenshoots
 
 
-* Backup a VM
+
+* Backup
 
 ```bash
-ruby virt-backup.rb --backup \
- --with-snapshots \
- --original-vm kube-2 \
- --save-dir /var/lib/libvirt/images/backup-4/
+ruby /root/virt-backup/virt-backup.rb \
+  --backup \
+  --original-vm snap23 \
+  --save-dir /var/lib/libvirt/images/backup-11/ \
+  --with-snapshots
 ```
 
-![](https://i.imgur.com/W8YRsGD.png)
+![](Images/msxoiYc.png)
 
 
-* Restore the VM
+
+* Restore
 
 ```bash
-ruby virt-backup.rb --restore \
- --with-snapshots \
- --backup-file /var/lib/libvirt/images/backup-4/kube-2.zip \
- --restore-dir /var/lib/libvirt/images
+ruby /root/virt-backup/virt-backup.rb \
+  --restore \
+  --with-snapshots \
+  --backup-file /var/lib/libvirt/images/backup-11/snap23.zip 
+  --restore-dir /var/lib/libvirt/images
 ```
 
-![](https://i.imgur.com/A0JHddH.png)
+![Imgur](Images/Uoh7Zpq.png)
 
----
 
 
 ### To be added (for now) 🔨
