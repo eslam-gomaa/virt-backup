@@ -489,21 +489,18 @@ elsif options[:restore]
   if $vm_.vm_exists_?($vm_name)
     if options[:with_snapshots]
       #$restored.define_snapshots($vm_name,snapshots_xml)
-
-
+      if $restored.snapshot_list_by_type(snapshots_xml)[:internal].count > 0
+        puts "[ INFO ] Restoring Internal Snapshots - (#{$restored.snapshot_list_by_type(snapshots_xml)[:internal].count}) detected"
+        restore_snapshot = Restore_snapshot.new(arr_of_hashes=$restored.snapshot_list_by_type(snapshots_xml)[:internal], vm=$vm_name,arr_by_order=$restored.snapshot_list_by_parent(snapshots_xml))
+        restore_snapshot.restore_internal_snapshot
+      end
+      if $restored.snapshot_list_by_type(snapshots_xml)[:external].count > 0
+        puts "[ INFO ] (#{$restored.snapshot_list_by_type(snapshots_xml)[:external].count}) External Snapshots detected"
+        puts "[ INFO ] External Snapshots are NOT Supported yet..."
+      end
     end
   end
 
-
-  if $restored.snapshot_list_by_type(snapshots_xml)[:internal].count > 0
-    puts "[ INFO ] Restoring Internal Snapshots - (#{$restored.snapshot_list_by_type(snapshots_xml)[:internal].count}) detected"
-    restore_snapshot = Restore_snapshot.new(arr_of_hashes=$restored.snapshot_list_by_type(snapshots_xml)[:internal], vm=$vm_name,arr_by_order=$restored.snapshot_list_by_parent(snapshots_xml))
-    restore_snapshot.restore_internal_snapshot
-  end
-  if $restored.snapshot_list_by_type(snapshots_xml)[:external].count > 0
-    puts "[ INFO ] (#{$restored.snapshot_list_by_type(snapshots_xml)[:external].count}) External Snapshots detected"
-    puts "[ INFO ] External Snapshots are NOT Supported yet..."
-  end
 
 
 
