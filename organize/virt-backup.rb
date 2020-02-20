@@ -21,7 +21,7 @@ OptionParser.new do |opts|
   options[:system_disk_only] = false
   options[:restore_dir]      = false
   options[:backup_file]      = false
-  options[:start]            = false
+  #options[:start]            = false
 
   opts.on("-B", "--backup", "Backup KVM VM") do |v|
     options[:backup] = v
@@ -34,10 +34,10 @@ OptionParser.new do |opts|
   opts.on("-s", "--with-snapshots", "Backup the Snapshots along with the VM") do |v|
     options[:with_snapshots] = v
   end
-  opts.on("-t", "--start", "To restore 'running' snapshots, the VM must be started first") do |v|
-    options[:start] = v
-    options[:start] = false if options[:start].nil?
-  end
+  #opts.on("-t", "--start", "To restore 'running' snapshots, the VM must be started first") do |v|
+  #  options[:start] = v
+  #  options[:start] = false if options[:start].nil?
+  #end
   opts.on("-S", "--system-disk-only", "Backup the system disk only") do |v|
     options[:system_disk_only] = v
   end
@@ -254,7 +254,6 @@ def backup(vm)
   if $options[:with_snapshots]
     if not $vm_.snapshots_list(vm).nil?
       for snapshot in $vm_.snapshots_list(vm)
-        #p snapshot.gsub(/\s+/, '-')
         $snap_xml_path = "/tmp/#{vm}-#{snapshot.gsub(/\s+/, '-')}-snap.xml"
         cmd  = "virsh snapshot-dumpxml #{vm} '#{snapshot}' > #{$snap_xml_path}"
         status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
@@ -308,6 +307,7 @@ def backup(vm)
       $zip.create_zip(zip_file, s)
       File.delete(s)
     end
+
   end
 
   # Add the VM's XML to the ZIP file
@@ -393,8 +393,6 @@ elsif options[:restore]
   snapshots_xml = Dir["#{$restore_dir}/*-snap.xml"]
   vm_xml = restored_xml - snapshots_xml
   restored_disks = restored_files  - restored_xml - checksum_file.split
-
-
 
 
   #checksum_keys = checksum_hash.keys
@@ -497,8 +495,18 @@ elsif options[:restore]
     end
   end
 
-  restore_snapshot = Restore_snapshot.new(arr_of_hashes=$restored.snapshot_list_by_type(snapshots_xml)[:internal], vm=$vm_name,start=options[:start])
-  restore_snapshot.restore_internal_snapshot
+
+  if $restored.snapshot_list_by_type(snapshots_xml)[:internal].count > 0
+    puts "[ INFO ] Restoring Internal Snapshots - (#{$restored.snapshot_list_by_type(snapshots_xml)[:internal].count}) detected"
+    restore_snapshot = Restore_snapshot.new(arr_of_hashes=$restored.snapshot_list_by_type(snapshots_xml)[:internal], vm=$vm_name,arr_by_order=$restored.snapshot_list_by_parent(snapshots_xml))
+    restore_snapshot.restore_internal_snapshot
+  end
+  if $restored.snapshot_list_by_type(snapshots_xml)[:external].count > 0
+    puts "[ INFO ] (#{$restored.snapshot_list_by_type(snapshots_xml)[:external].count}) External Snapshots detected"
+    puts "[ INFO ] External Snapshots are NOT Supported yet..."
+  end
+
+
 
 else
   puts "[ Warning ] use '--backup' or '--restore'"

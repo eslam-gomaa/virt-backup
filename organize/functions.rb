@@ -155,23 +155,23 @@ module Functions
         end
         $snapshots_list_type = {}
 
-          for s in $snapshots_list_r
-            cmd  = "virsh snapshot-info #{vm} '#{s}'"
-            status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
-              $err = stderr.read.strip
-              $out = stdout.read.strip
-            end
-            if status.exitstatus == 0
-              true
-            else
-              puts
-              STDERR.puts "[ Error ] Could NOT list Snapshots types"
-              puts
-              puts "=> #{$err}"
-            end
-            type = $out.split("\n").grep(/State:/)[0].gsub(/^State:/, '').strip
-            $snapshots_list_type[s] = type
+        for s in $snapshots_list_r
+          cmd  = "virsh snapshot-info #{vm} '#{s}'"
+          status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
+            $err = stderr.read.strip
+            $out = stdout.read.strip
           end
+          if status.exitstatus == 0
+            true
+          else
+            puts
+            STDERR.puts "[ Error ] Could NOT list Snapshots types"
+            puts
+            puts "=> #{$err}"
+          end
+          type = $out.split("\n").grep(/State:/)[0].gsub(/^State:/, '').strip
+          $snapshots_list_type[s] = type
+        end
 
           #p $snapshots_list_detailed
 
@@ -328,6 +328,12 @@ module Functions
       info[:state] = File.readlines(xml_file).grep(/<state>/)[0].gsub(/<state>/, '').gsub('</state>','').gsub("\n", '').gsub(/^\s+/, '')
       info[:type] = File.readlines(xml_file).grep(/snapshot=/)[1].gsub(/<disk name=/, '').gsub(/v.[a-z]/, '').gsub(/\s/, '').gsub(/snapshot=/, '').gsub('/>', '').gsub("\n", '').gsub(/^\s+/, '').gsub("'", '')
       info[:xml] = xml_file
+      parent_ = File.readlines(xml_file).grep(/\s\s\s<name>/)
+      if parent_.count == 2
+        info[:parent] = File.readlines(xml_file).grep(/\s\s\s<name>/)[0].strip.gsub(/<name>/, '').gsub('</name>', '')
+      else parent_.count == 1
+      info[:parent] = nil
+      end
 
       info
     end
@@ -387,9 +393,6 @@ module Functions
         for snap in snapshot_files
           snapshot_info(snap)
         end
-        shutdown_snapshots = snapshot_info()
-        running_snapshots = ''
-
 
         for snap in snapshot_files
           cmd  = "virsh snapshot-create #{vm} --xmlfile #{snap}"
@@ -418,9 +421,31 @@ module Functions
       end
     end
 
-    def define_restored_vm(vml_file)
+
+    def snapshot_list_by_parent(xml_files_arr)
+      arr     = []
+
+      for x in xml_files_arr
+        info = snapshot_info(x)
+        arr.push(info)
+      end
+
+      arr.collect { |i| i[:order] = nil }
+      arr.collect { |i| i[:order] = 1 if i[:parent] == nil }
+
+      (2).upto(arr.count) do |c|
+        arr.collect { |i| i[:order] = c if i[:parent] == arr.collect{|o| o[:name] if o[:order] == c - 1}.compact[0] }
+      end
+      #father_name = arr.collect{|i| i[:name] if i[:order] == 1}.compact[0]
+      #arr.collect { |i| i[:order] = 2 if i[:parent] == arr.collect{|o| o[:name] if o[:order] == 1}.compact[0] }
+      #arr.collect { |i| i[:order] = 3 if i[:parent] == arr.collect{|o| o[:name] if o[:order] == 2}.compact[0] }
+      
+      arr.sort_by { |v| v[:order] }
+    end
+
+    def define_restored_vm(xml_file)
       STDOUT.puts "[ INFO ] Defining the restored VM: (#{$vm_name})"
-      cmd  = "virsh define #{vml_file}"
+      cmd  = "virsh define #{xml_file}"
       status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
         $err = stderr.read.strip
         $out = stdout.read.strip
@@ -440,11 +465,12 @@ module Functions
 
 ### Examples ###
 
-#vm = VM.new('kube-master-15')
+#vm = VM.new('snap22')
 # p vm.methods
 #p vm.snapshots_list
 #p vm.vm_info
 #p vm.snapshots_list_type
+  #p vm.snapshots_list
 
 #md5 = MD5.new
 #p md5.methods
@@ -453,8 +479,22 @@ module Functions
 #zip = ZIP.new
 #p zip.methods
 
-#restored = Restored.new
+
+
+
+  restored = Restored.new
 #  restored.methods
 #  p restored.snapshots_list_restore('kube-master-15')
-#p restored.snapshot_info('/root/snap2-s1.xml')
+#p restored.snapshot_info('/root/snap2-s1.xml')[:parent]
+#p restored.snapshot_info('/root/snap2-s2.xml')
+  xmls = ['/root/xml/snap22-docker-installed-snap.xml',
+          '/root/xml/snap22-snap2-s1-snap.xml',
+          '/root/xml/snap22-test-shutdown-snapshot-snap.xml',
+          '/root/xml/snap22-paused-snapshot-snap.xml',
+          '/root/xml/snap22-snap2-s2-snap.xml']
+
+    #p restored.snapshot_list_by_parent(xmls)
+
+
+
 end
