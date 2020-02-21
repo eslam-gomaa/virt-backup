@@ -1,7 +1,7 @@
 # virt-backup :rocket:
 Fully backup & restore your KVM Virtual Machines 
 
-**Version**  `Beta 1.1` 
+**Version**  `1.0` Stable 
 
 ---
 
