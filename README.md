@@ -3,7 +3,7 @@
 
 :beetle: **Found Bug:** 
 * backup only support disks up to 5.5 GB (only support `zip 32 bit`) `-->`
-* **Fixed** (`zip 64 bit` added) ; the code will be pushed after some code optimization
+   * **Fixed** (`zip 64 bit` added) ; the code will be pushed after some code optimization
 
 ---
 
