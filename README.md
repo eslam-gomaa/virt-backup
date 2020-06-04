@@ -139,7 +139,7 @@ ruby /root/virt-backup/virt-backup.rb \
 * If md5 mismatch found, print where is the difference ✔️
 * Pause the VM before collecting the checksum ✔️
 * Fix: Error if snapshot name has a space ✔️
-* Fix: Restore snapshot --> stable now 
+* Fix: Restore snapshot --> stable now ✔️
 
 ---
 
