@@ -30,7 +30,7 @@ Fully backup & restore your KVM Virtual Machines
 > For **Ubuntu** it's easy to install ruby 2.5
 ```bash
 apt-get install -y ruby
-apt update ruby # By default you'lll install Ruby 2.5
+apt update ruby # By default you'll install Ruby 2.5
 ```
 
 ```bash
@@ -128,9 +128,7 @@ ruby /root/virt-backup/virt-backup.rb \
 
 
 
-### To be added (for now) 🔨
 
-* Description for the methods used inside the code
 
 ### Updates & Fixes
 
@@ -141,6 +139,8 @@ ruby /root/virt-backup/virt-backup.rb \
 * Update: Zip 64 bit is added (the support to backup & restore large disk files) ✔️
 
 ---
+
+
 
 Thank you
 
