@@ -17,21 +17,27 @@ Fully backup & restore your KVM Virtual Machines
 
 ## Install
 
+* At least Ruby Version `2.4` is needed
+
 * Just install the gems used and you're good to go *(Assuming that you have KVM installed)*
 
-```bash
-yum install -y ruby
-```
-> OR
+
+
+> To Install Ruby 2.4 on **CentOS** you can follow these steps [install_ruby_2.4.2_CentOS.md](docs/install_ruby_2.4.2_CentOS.md)
+
+
+
+> For **Ubuntu** it's easy to install ruby 2.5
 ```bash
 apt-get install -y ruby
+apt update ruby # By default you'lll install Ruby 2.5
 ```
 
 ```bash
-gem install rubysl-tempfile # Ok
+gem install rubysl-tempfile
 gem install rubysl-optparse
 gem install open4
-#gem install OptionParser
+gem uninstall zip # Need to be removed if installed
 gem install rubyzip
 ```
 
@@ -45,11 +51,11 @@ ruby virt-backup.rb --help
 
 #### Installation test result
 
-| Distro             | Test Result |
-| ------------------ | ----------- |
-| `Ubuntu 16.04`     | ✔️           |
-| `Ubuntu 18.04`     | ✔️           |
-| `Centos 7`         | ✔️           |
+| Distro         | Test Result |
+| -------------- | ----------- |
+| `Ubuntu 16.04` | ✔️           |
+| `Ubuntu 18.04` | ✔️           |
+| `Centos 7`     | ✔️           |
 
 
 ---
@@ -131,11 +137,12 @@ ruby /root/virt-backup/virt-backup.rb \
 * If md5 mismatch found, print where is the difference ✔️
 * Pause the VM before collecting the checksum ✔️
 * Fix: Error if snapshot name has a space ✔️
-* Fix: Restore snapshot --> stable now 
+* Fix: Restore snapshot --> stable now ✔️
+* Update: Zip 64 bit is added (the support to backup & restore large disk files) ✔️
 
 ---
 
 Thank you
 
-Eslam Gomaa
+[Eslam Gomaa](https://www.linkedin.com/in/eslam-gomaa/)
 
