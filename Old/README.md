@@ -1,3 +1,12 @@
+
+## Important
+
+:beetle: **Found Bug:** 
+* backup only support disks up to 5.5 GB (only support `zip 32 bit`)
+   * **Fixed** (`zip 64 bit` support has been added) ; the code will be pushed after some code optimization
+
+---
+
 # virt-backup :rocket:
 Fully backup & restore your KVM Virtual Machines 
 
@@ -28,11 +37,11 @@ apt-get install -y ruby
 ```
 
 ```bash
-gem install rubysl-tempfile # Ok
+gem install rubysl-tempfile
 gem install rubysl-optparse
 gem install open4
-#gem install OptionParser
-gem install rubyzip
+gem install OptionParser
+gem install zip
 ```
 
 ```bash
@@ -47,8 +56,7 @@ ruby virt-backup.rb --help
 
 | Distro             | Test Result |
 | ------------------ | ----------- |
-| `Ubuntu 16.04`     | ✔️           |
-| `Ubuntu 18.04`     | ✔️           |
+| `Ubuntu 16.04 LTS` | ✔️           |
 | `Centos 7`         | ✔️           |
 
 
@@ -131,7 +139,7 @@ ruby /root/virt-backup/virt-backup.rb \
 * If md5 mismatch found, print where is the difference ✔️
 * Pause the VM before collecting the checksum ✔️
 * Fix: Error if snapshot name has a space ✔️
-* Fix: Restore snapshot --> stable now 
+* Fix: Restore snapshot --> stable now ✔️
 
 ---
 

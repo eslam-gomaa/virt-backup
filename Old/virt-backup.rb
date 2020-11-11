@@ -62,14 +62,14 @@ end.parse!
 
 if options[:backup]
   if options[:original_vm] == false
-    puts "\n[ INFO ] ".light_blue + "you must specify --original-vm"
+    puts "\n[ INFO ] you must specify --original-vm"
     puts
     puts $opts
     puts
     exit(1)
   end
   if options[:save_dir] == false
-    puts "\n[ INFO ] ".light_blue + "you must specify --save-dir"
+    puts "\n[ INFO ] you must specify --save-dir"
     puts
     puts $opts
     puts
@@ -77,14 +77,14 @@ if options[:backup]
   end
 
   if ! File.directory?(options[:save_dir])
-    STDERR.puts "[ Error ] ".red + "--save-dir option must be a directory"
+    STDERR.puts "[ Error ] --save-dir option must be a directory"
     exit(1)
   end
 end
 
 if options[:restore]
   if options[:backup_file] == false
-    puts "\n[ INFO ] ".light_blue + "you must specify --backup-file"
+    puts "\n[ INFO ] you must specify --backup-file"
     puts
     puts $opts
     puts
@@ -92,23 +92,23 @@ if options[:restore]
   end
 
   if ! File.file?(options[:backup_file])
-    STDERR.puts "\n[ INFO ] ".light_blue + "you must specify a File --backup-file FILE.zip"
+    STDERR.puts "\n[ INFO ] you must specify a File --backup-file FILE.zip"
     puts
     STDERR.puts $opts
     exit(1)
   elsif File.extname(options[:backup_file]) != ".zip"
-    STDERR.puts "\n[ INFO ] ".light_blue + "--backup-file must be a ZIP File"
+    STDERR.puts "\n[ INFO ] --backup-file must be a ZIP File"
     puts
     STDERR.puts $opts
     exit(1)
   elsif options[:backup_file].nil?
-    STDERR.puts "\n[ INFO ] ".light_blue + "you must specify --backup-file"
+    STDERR.puts "\n[ INFO ] you must specify --backup-file"
     puts
     exit(1)
   end
 
   if options[:restore_dir] == false
-    puts "\n[ INFO ] ".light_blue + "you must specify --restore-dir"
+    puts "\n[ INFO ] you must specify --restore-dir"
     puts
     puts $opts
     puts
@@ -116,7 +116,7 @@ if options[:restore]
   end
 
   if ! File.directory?(options[:restore_dir])
-    STDERR.puts "[ Error ] ".red + "--restore-dir option must be a directory"
+    STDERR.puts "[ Error ] --restore-dir option must be a directory"
     exit(1)
   end
 end
@@ -139,9 +139,6 @@ class String
   end
   def green
     colorize(32)
-  end
-  def gray
-    colorize(90)
   end
 end
 
@@ -187,11 +184,11 @@ end
 
 $options = options
 def backup(vm)
-  
+
   zip_file = "#{$options[:save_dir]}/#{vm}.zip"
   if File.file?(zip_file)
     puts
-    puts "[ INFO ] ".light_blue + "A backup file with the same name already exists, choose another directory"
+    puts "[ INFO ] A backup file with the same name already exists, choose another directory"
     exit(1)
   end
 
@@ -200,8 +197,8 @@ def backup(vm)
   # Throw a warning if there are missing disks for the VM's (specified in the XML file but NOT exist)
   if $vm_.vm_info(vm)[:disks_missing_number] > 0
     puts
-    STDERR.puts "[ Warning ] (#{$vm_.vm_info(vm)[:disks_missing_number]}) Missing disk/s found, Will NOT be backed up:"
-    STDERR.puts "\t\s\s\s\s => #{$vm_.vm_info(vm)[:disks_missing]}"
+    STDERR.puts "[ Warning ] (#{vm_info(vm)[:disks_missing_number]}) Missing disk/s found, Will NOT be backed up:"
+    STDERR.puts "\t\s\s\s\s => #{vm_info(vm)[:disks_missing]}"
   end
 
   # get xml file of the VM
@@ -217,17 +214,17 @@ def backup(vm)
     true
   else
     puts
-    STDERR.puts "[ Error ] ".red + "could NOT Extract VM XML, check the Error below" #  \n#{'-'.*(55)}
+    STDERR.puts "[ Error ] could NOT Extract VM XML, check the Error below" #  \n#{'-'.*(55)}
     puts
     puts "\t\s => #{$err}"
     exit(1)
   end
 
   puts
-  puts "[ INFO ] ".light_blue + "Current VM State: " + "#{$vm_.vm_state?($options[:original_vm])}".pink
+  puts "[ INFO ] Current VM State: " + "#{$vm_.vm_state?($options[:original_vm])}".pink
 
   if $vm_.vm_state?($options[:original_vm]) == 'running'
-    STDOUT.puts "[ INFO ] ".light_blue + "Pausing the VM"
+    STDOUT.puts "[ INFO ] Pausing the VM"
     cmd  = "virsh suspend #{$options[:original_vm]}"
     status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
       $err = stderr.read.strip
@@ -236,14 +233,14 @@ def backup(vm)
     if status.exitstatus == 0
       true
     else status.exitstatus > 0
-    STDERR.puts "[ ERROR ] ".red + "vm: (#{$options[:original_vm]}) Unable to Pause the VM "
+    STDERR.puts "[ ERROR ] vm: (#{$options[:original_vm]}) Unable to Pause the VM "
     STDERR.puts "=> #{$err}"
     exit(1)
     end
   end
   sleep(6)
 
-  STDOUT.puts "[ INFO ] ".light_blue + "Getting checksum of the Files will be backed up - May take time based on size".gray
+  STDOUT.puts "[ INFO ] Getting checksum of the Files will be backed up - May take time based on size"
   # Check sum of the files that'll be backed-up
   checksum = $md5.disks_md5($vm_.vm_info(vm)[:disks_exist])
   checksum[:"#{vm}.xml"] = $md5.file_md5($vm_xml_path)
@@ -254,22 +251,22 @@ def backup(vm)
   # checksum of snapshots XML files
   $snapshot_paths = []
   if $options[:with_snapshots]
-    unless $vm_.snapshots_list(vm).nil?
+    if not $vm_.snapshots_list(vm).nil?
       for snapshot in $vm_.snapshots_list(vm)
-        $snap_xml_path = "/tmp/#{vm}-#{snapshot.gsub(/\s+/, '-').gsub('(', '[').gsub(')', ']')}-snap.xml"
-        cmd = "virsh snapshot-dumpxml #{vm} '#{snapshot}' > #{$snap_xml_path}"
-        status = Open4::popen4(cmd) do |pid, stdin, stdout, stderr|
+        $snap_xml_path = "/tmp/#{vm}-#{snapshot.gsub(/\s+/, '-')}-snap.xml"
+        cmd  = "virsh snapshot-dumpxml #{vm} '#{snapshot}' > #{$snap_xml_path}"
+        status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
           $err = stderr.read.strip
         end
         if status.exitstatus == 0
           true
         else
           puts
-          STDERR.puts "[ Error ] ".red + "could NOT Extract Snapshot XML (#{snapshot}), check the Error below" # \n#{'-'.*(55)} # to print ----
+          STDERR.puts "[ Error ] could NOT Extract Snapshot XML (#{snapshot}), check the Error below" # \n#{'-'.*(55)} # to print ----
           puts "\t\s => #{$err}"
           exit(1)
         end
-        checksum[:"#{vm}-#{snapshot.gsub(/\s+/, '-').gsub('(', '[').gsub(')', ']')}-snap.xml".to_s] = $md5.file_md5($snap_xml_path).to_s
+        checksum[:"#{vm}-#{snapshot.gsub(/\s+/, '-')}-snap.xml".to_s] = $md5.file_md5($snap_xml_path).to_s
         $snapshot_paths << $snap_xml_path
       end
     end
@@ -292,15 +289,16 @@ def backup(vm)
   end
   #p disks_to_backup
 
-  STDOUT.puts "[ INFO ] ".light_blue + "Backing up VM: (#{$options[:original_vm]}), N of disks: (#{disks_to_backup.count}) - May take time based on size"
+  STDOUT.puts "[ INFO ] Backing up VM: (#{$options[:original_vm]}), N of disks: (#{disks_to_backup.count}) - May take time based on size"
 
   # Create Zip file, & add the "checksum" of the files will be backed up
   checksum_file = "/tmp/#{vm}.checksum"
   File.open(checksum_file, 'w') { |f|
     f.puts checksum }
 
+
   $zip.create_zip(zip_file,checksum_file)
-  #File.delete(checksum_file)
+  File.delete(checksum_file)
 
   # Add snapshots XML files to the ZIP file
   if $options[:with_snapshots]
@@ -323,7 +321,7 @@ def backup(vm)
   end
 
   if $vm_.vm_state?(vm) == "paused"
-    STDOUT.puts "[ INFO ] ".light_blue + "Resuming the VM"
+    STDOUT.puts "[ INFO ] Resuming the VM"
     cmd  = "virsh resume #{$options[:original_vm]}"
     status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
       $err = stderr.read.strip
@@ -332,15 +330,15 @@ def backup(vm)
     if status.exitstatus == 0
       true
     else status.exitstatus > 0
-    STDERR.puts "[ ERROR ] ".red + "vm: (#{$options[:original_vm]}) Unable to Resume the VM "
+    STDERR.puts "[ ERROR ] vm: (#{$options[:original_vm]}) Unable to Resume the VM "
     STDERR.puts "\t\s\s=> #{$err}"
     exit(1)
     end
     sleep(3)
-    puts "[ INFO ] ".light_blue + "Current VM State: " + "#{$vm_.vm_state?($options[:original_vm])}".pink
+    puts "[ INFO ] Current VM State: " + "#{$vm_.vm_state?($options[:original_vm])}".pink
   end
   $backed_up_file = "#{$options[:save_dir]}/#{vm}.zip"
-  puts "[ INFO ] ".light_blue + "Backup stored successfully in (#{$backed_up_file.gsub("//", "/")})"
+  puts "[ INFO ] Backup stored successfully in (#{$backed_up_file.gsub("//", "/")})"
 end
 
 if options[:backup]
@@ -358,13 +356,13 @@ elsif options[:restore]
 
 
   if File.directory?($restore_dir)
-    puts "[ INFO ] ".light_blue + "Dir: (#{$restore_dir}) already exists, Try again with a non-existing directory"
+    puts "[ INFO ] Dir: (#{$restore_dir}) already exists, Try again with a non-existing directory"
     exit(1)
   end
 
   ####
 
-  puts "[ INFO ] ".light_blue + "Restoring VM: (#{$vm_name}), May take time based on size"
+  puts "[ INFO ] Restoring VM: (#{$vm_name}), May take time based on size"
 
   # Create Restore directory
   FileUtils.mkdir_p($restore_dir)
@@ -372,14 +370,14 @@ elsif options[:restore]
   begin
     $zip.extract_zip(options[:backup_file], $restore_dir)
   rescue Errno::ENOSPC => e
-    STDERR.puts "[ Error ] ".red + "No Space Left on the Device - choose a directory with enough space"
+    STDERR.puts "[ Error ] No Space Left on the Device - choose a directory with enough space"
     STDERR.puts "\t\s => #{e}"
-    #STDERR.puts "[ INFO ] Rolling back"
-    #FileUtils.rm_rf($restore_dir)
-    #exit(1)
+    STDERR.puts "[ INFO ] Rolling back"
+    FileUtils.rm_rf($restore_dir)
+    exit(1)
   end
 
-  STDOUT.puts "[ INFO ] ".light_blue + "Backup restored successfully in (#{$restore_dir})"
+  STDOUT.puts "[ INFO ] Backup restored successfully in (#{$restore_dir})"
 
   #zip_files = read_zip(options[:backup_file])
 
@@ -400,7 +398,7 @@ elsif options[:restore]
 
   #p checksum_hash
 
-  STDOUT.puts "[ INFO ] ".light_blue + "Getting checksum of the restored backup - May take time based on size".gray
+  STDOUT.puts "[ INFO ] Getting checksum of the restored backup - May take time based on size"
   restored_files_hash = $md5.disks_md5(restored_files)
 
 
@@ -416,7 +414,7 @@ elsif options[:restore]
     # restored_disks_str      => actually restored disks
 
     if vm_info_restored_p_disk == restored_disks_str
-      puts "[ INFO ] ".light_blue + "Only Primary disk is detected for this backup".gray
+      puts "[ INFO ] Only Primary disk is detected for this backup"
       to_del_from_checksum = $restored.vm_info_restored(vm_xml[0])[:disks] - $restored.vm_info_restored(vm_xml[0])[:disks].grep(/#{restored_disks_str}$/)
 
       for d in to_del_from_checksum
@@ -429,7 +427,7 @@ elsif options[:restore]
   #p "disks from restored xml"
   #p vm_info_restored(vm_xml[0])[:disks]
 
-  puts "[ INFO ] ".light_blue + "Comparing backup MD5 vs restored MD5".gray
+  puts "[ INFO ] Comparing backup MD5 vs restored MD5"
   $md5.compare_md5(checksum_hash, restored_files_hash)
 
   #$snapshots_xml = snapshots_xml
@@ -442,7 +440,7 @@ elsif options[:restore]
   #puts "[ INFO ] Updating disks location with the restored dir"
 
   if restored_disks.length <= 1
-    puts "[ INFO ] ".light_blue + "Updating disk location with the restored dir".gray
+    puts "[ INFO ] Updating disk location with the restored dir"
     restored_xml_disks_p_disk = $restored.vm_info_restored(vm_xml[0])[:disks][0]
     new_disk_location = "#{$restore_dir}/#{File.basename(restored_xml_disks_p_disk)}".gsub("//", "/")
 
@@ -454,7 +452,7 @@ elsif options[:restore]
     File.open(vm_xml[0],'w') {|file| file << a1}
 
   else restored_disks.length > 1
-  puts "[ INFO ] ".light_blue + "Updating disks location with the restored dir".gray
+  puts "[ INFO ] Updating disks location with the restored dir"
   for d in restored_xml_disks
     new_disk_location = "#{$restore_dir}/#{File.basename(d)}".gsub("//", "/")
     # d                 => disk location that needs to be replaced
@@ -469,29 +467,35 @@ elsif options[:restore]
   end
   end
 
+  # update snapshots xml disks
+
+  #p $restore_dir
+
+  puts "[ INFO ] Updating snapshots disks location with the restored dir"
+  $restored.update_snapshot_disk_dir(snapshots_xml, $restore_dir)
+
+
   # Define the vm
+
   if $vm_.vm_exists_?($vm_name) == false
     $restored.define_restored_vm(vm_xml[0])
   else
-    puts "[ INFO ] ".light_blue + "VM: (#{$vm_name}) already exists - Skip defining the VM"
+    puts "[ INFO ] VM: (#{$vm_name}) already exists - Skip defining the VM"
   end
 
   #p snapshots_list($vm_name)
   #p snapshots_xml
 
-
   if $vm_.vm_exists_?($vm_name)
     if options[:with_snapshots]
+      #$restored.define_snapshots($vm_name,snapshots_xml)
       if $restored.snapshot_list_by_type(snapshots_xml)[:internal].count > 0
-        puts "[ INFO ] ".light_blue + "Restoring Internal Snapshots - (#{$restored.snapshot_list_by_type(snapshots_xml)[:internal].count}) detected"
+        puts "[ INFO ] Restoring Internal Snapshots - (#{$restored.snapshot_list_by_type(snapshots_xml)[:internal].count}) detected"
         restore_snapshot = Restore_snapshot.new(arr_of_hashes=$restored.snapshot_list_by_type(snapshots_xml)[:internal], vm=$vm_name,arr_by_order=$restored.snapshot_list_by_parent(snapshots_xml))
         restore_snapshot.restore_internal_snapshot
-        # update snapshots xml disks
-        puts "[ INFO ] ".light_blue + "Updating snapshots disks location with the restored dir".gray
-        $restored.update_snapshot_disk_dir(snapshots_xml, $restore_dir)
       end
       if $restored.snapshot_list_by_type(snapshots_xml)[:external].count > 0
-        puts "[ INFO ] ".light_blue + " (#{$restored.snapshot_list_by_type(snapshots_xml)[:external].count}) External Snapshots detected"
+        puts "[ INFO ] (#{$restored.snapshot_list_by_type(snapshots_xml)[:external].count}) External Snapshots detected"
         puts "[ INFO ] External Snapshots are NOT Supported yet..."
       end
     end

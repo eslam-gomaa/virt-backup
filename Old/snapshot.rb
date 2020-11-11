@@ -7,24 +7,7 @@ require 'optparse'
 require 'fileutils'
 require 'json'
 
-class String
-  # colorization
-  def colorize(color_code)
-    "\e[#{color_code}m#{self}\e[0m"
-  end
-  def red
-    colorize(31)
-  end
-  def pink
-    colorize(35)
-  end
-  def light_blue
-    colorize(36)
-  end
-  def green
-    colorize(32)
-  end
-end
+
 
 module Snapshot
   class Restore_snapshot
@@ -43,9 +26,9 @@ module Snapshot
       need_to_start = running.concat paused
       vm_ = VM.new(vm)
       if need_to_start.count > 1
-        puts "[ INFO ] ".light_blue + "(#{need_to_start.count}) snapshots in RUNNING/PAUSED state detected".gray
+        puts "[ INFO ] (#{need_to_start.count}) snapshots in RUNNING/PAUSED state detected"
         if vm_.vm_state? == 'shut off'
-          puts "[ INFO ] ".light_blue + "Starting the VM: (#{vm})"
+          puts "[ INFO ] Starting the VM: (#{vm})"
           cmd  = "virsh start #{vm}"
           status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
             $err = stderr.read.strip
@@ -54,12 +37,12 @@ module Snapshot
           if status.exitstatus == 0
             true
           else status.exitstatus > 0
-          STDERR.puts "[ ERROR ] ".red + "Unable to Start VM: (#{vm})"
+          STDERR.puts "[ ERROR ] Unable to Start VM: (#{vm})"
           puts "\t\s => #{$err}"
           end
           # waiting for 60 seconds before restoring the snapshots
           60.to_i.downto(0) do |i|
-            print "\r[ INFO ] ".light_blue + "Waiting for: #{i} seconds  ".gray
+            print "\r[ INFO ] Waiting for: #{i} seconds  "
             sleep 1
           end
           puts
@@ -74,24 +57,24 @@ module Snapshot
           $out = stdout.read.strip
         end
         if status.exitstatus == 0
-          puts "\t\s => " + "Snapshot: (#{h[:name]}) Restored Successfully".green
+          puts "\t\s => Snapshot: (#{h[:name]}) Restored Successfully"
         else status.exitstatus > 0
-        STDERR.puts "[ ERROR ] ".red + "Unable to restore snapshot: (#{h[:name]})"
+        STDERR.puts "[ ERROR ] Unable to restore snapshot: (#{h[:name]})"
         puts "\t\s => #{$err}"
         end
       end
       #last_snap_name = hash_order.last[:name]
       last_snap_name = vm_.snapshots_list.last
-      puts "[ INFO ] ".light_blue + "Reverting to the last snapshot: (#{last_snap_name})".gray
+      puts "[ INFO ] revert to the last snapshot: #{last_snap_name}"
       cmd  = "virsh snapshot-revert --domain #{vm} --snapshotname '#{last_snap_name}'"
       status = Open4::popen4(cmd) do |pid,stdin,stdout,stderr|
         $err = stderr.read.strip
         $out = stdout.read.strip
       end
       if status.exitstatus == 0
-        puts "\t\s => " + "Snapshot: (#{last_snap_name}) Reverted Successfully".green
+        puts "\t\s => Snapshot: (#{last_snap_name}) Reverted Successfully"
       else status.exitstatus > 0
-      STDERR.puts "[ ERROR ] ".red + "Unable to revert snapshot: (#{last_snap_name})"
+      STDERR.puts "[ ERROR ] Unable to revert snapshot: (#{last_snap_name})"
       puts "\t\s => #{$err}"
       end
     end
