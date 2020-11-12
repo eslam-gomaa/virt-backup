@@ -253,7 +253,7 @@ class ZIP
   # Append the file to the ZIP File
   def create_zip(zip_file, file, compression=Zlib::DEFAULT_COMPRESSION)
     begin
-      Zip.default_compression = compression
+      #Zip.default_compression = compression
       Zip.write_zip64_support = true
       Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
         zipfile.add(File.basename(file), file)
