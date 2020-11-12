@@ -121,7 +121,7 @@ end
         cmd = exec_cmd("virsh snapshot-list --domain #{vm} --tree")
         if cmd[:exit_status] == 0
           if cmd[:stdout].length == 0
-            STDERR.puts "[ INFO ] ".light_blue + "No Snapshots Found for (#{vm})".gray
+            # STDERR.puts "[ INFO ] ".light_blue + "No Snapshots Found for (#{vm})".gray
           else
             snapshots_list = cmd[:stdout].to_s.gsub("+-","").gsub("|","").gsub("\n","").split(/\s\s\s\s/).reject {|s| s.empty?}
             snapshots_list_r = snapshots_list.collect {|s| s.gsub(/^\s/, "").gsub(/^\s\s/, '').gsub(/^\s\s\s/, '').gsub(/^\s/, '').gsub(/^\s\s/, '')}
@@ -187,13 +187,14 @@ class MD5
   # check MD5 Checksum of a file - --> used by "disks_md5()" method
   def file_md5(file)
     begin
-      secret = ''
-      File.open(file, 'r') do |f|
-        secret = Digest::MD5.new
-        until f.eof?
-          f.each { |chunk| secret.update(chunk) }
-        end
-      end
+    #  secret = ''
+    #  File.open(file, 'r') do |f|
+    #    secret = Digest::MD5.new
+    #    until f.eof?
+    #      f.each { |chunk| secret.update(chunk) }
+    #    end
+    #  end
+      secret = secret = Digest::MD5.file file
       secret.hexdigest
     rescue Errno::ENOENT => e
       puts("[ Error ] - #{e}")
@@ -250,8 +251,9 @@ end
 class ZIP
   # If ZIP File does NOT exist - will create it
   # Append the file to the ZIP File
-  def create_zip(zip_file, file)
+  def create_zip(zip_file, file, compression=Zlib::DEFAULT_COMPRESSION)
     begin
+      Zip.default_compression = compression
       Zip.write_zip64_support = true
       Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
         zipfile.add(File.basename(file), file)
@@ -261,49 +263,48 @@ class ZIP
       #puts "file #{file} exists"
     end
   end
+
 # create_zip('zip1.zip', 'kube-ready-to-install.qcow2')
 
-  def create_zip_22(zip_file, file, compression=Zlib::DEFAULT_COMPRESSION)
-    Zip.default_compression = compression
-    Zip.write_zip64_support = true
-    begin
-      Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
-        #zipfile.add(File.basename(file), file)
-        File.open(file, 'r') do |f|
-          while chunk == f.read(16*1024) do
-            zipfile.get_output_stream(File.basename(file)){|c| c.write(chunk)}
-            # zipfile.get_output_stream(File.basename(file)){|f| f.write File.read(file, 'r')}
-          end
-        end
-        puts "\t\s => " + "#{File.basename(file)}  [OK]".green
-      end
-    rescue Zip::ZipEntryExistsError => e  # To avoide printing "File already exists" Error
-      #puts "file #{file} exists"
-    end
-  end
+#  def create_zip_22(zip_file, file, compression=Zlib::NO_COMPRESSION)
+#    Zip.default_compression = compression
+#    Zip.write_zip64_support = true
+#    begin
+#      Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
+#        #zipfile.add(File.basename(file), file)
+#        File.open(file, 'r') do |f|
+#          while chunk == f.read(16*1024) do
+#            zipfile.get_output_stream(File.basename(file)){|c| c.write(chunk)}
+#            # zipfile.get_output_stream(File.basename(file)){|f| f.write File.read(file, 'r')}
+#          end
+#        end
+#        puts "\t\s => " + "#{File.basename(file)}  [OK]".green
+#      end
+#    rescue Zip::ZipEntryExistsError => e  # To avoide printing "File already exists" Error
+#      #puts "file #{file} exists"
+#    end
+#  end
 
 
 
-  def create_zip_test(zip_file, file, compression=Zlib::DEFAULT_COMPRESSION)
-    Zip.default_compression = compression
-    Zip.write_zip64_support = true
-    begin
-      Zip::OutputStream.open(zip_file) do |io|
-        io.put_next_entry(File.basename(file))
-        File.open(file, 'r') do |source|
-          until source.eof?
-            chunk = source.read 1024
-            io.write chunk
-          end
-        end
-      end
-      puts "\t\s => " + "#{File.basename(file)}  [OK]".green
-    end
-  rescue Zip::ZipEntryExistsError => e  # To avoid printing "File already exists" Error
-    #puts "file #{file} exists"
-  end
-
-
+#  def create_zip_test(zip_file, file, compression=Zlib::NO_COMPRESSION)
+#    Zip.default_compression = compression
+#    Zip.write_zip64_support = true
+#    begin
+#      Zip::OutputStream.open(zip_file) do |io|
+#        io.put_next_entry(File.basename(file))
+#        File.open(file, 'r') do |source|
+#          until source.eof?
+#            chunk = source.read 1024
+#            io.write chunk
+#          end
+#        end
+#      end
+#      puts "\t\s => " + "#{File.basename(file)}  [OK]".green
+#    end
+#  rescue Zip::ZipEntryExistsError => e  # To avoid printing "File already exists" Error
+#    #puts "file #{file} exists"
+#  end
 
   def read_zip(file)
     files_arr = []
