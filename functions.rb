@@ -251,15 +251,25 @@ end
 class ZIP
   # If ZIP File does NOT exist - will create it
   # Append the file to the ZIP File
-  def create_zip(zip_file, file, compression=Zlib::DEFAULT_COMPRESSION)
+
+  def create_zip(zip_file, file, compression)
     begin
-      #Zip.default_compression = compression
+
+    if compression == 'none'
+      compression = Zlib::NO_COMPRESSION
+    elsif compression == 'best'
+      compression = Zlib::BEST_COMPRESSION
+    elsif compression == 'default'
+      compression = Zlib::DEFAULT_COMPRESSION
+    end
+
+      Zip.default_compression = compression
       Zip.write_zip64_support = true
       Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
         zipfile.add(File.basename(file), file)
         puts "\t\s => " + "#{File.basename(file)}  [OK]".green
       end
-    rescue Zip::ZipEntryExistsError => e  # To avoide printing "File already exists" Error
+    rescue Zip::ZipEntryExistsError => e  # To avoid printing "File already exists" Error
       #puts "file #{file} exists"
     end
   end

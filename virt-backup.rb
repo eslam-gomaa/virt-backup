@@ -20,6 +20,7 @@ OptionParser.new do |opts|
   options[:system_disk_only] = false
   options[:restore_dir]      = false
   options[:backup_file]      = false
+  options[:compression]      = 'default'
   #options[:start]            = false
 
   opts.on("-B", "--backup", "Backup KVM VM") do |v|
@@ -56,6 +57,10 @@ OptionParser.new do |opts|
     options[:restore_dir] = ARGV[0]
     options[:restore_dir] = false if options[:restore_dir].nil?
   end
+  opts.on("-c", "--compression", "Choose the compression level; Default: default") do |v|
+    options[:compression] = ARGV[0]
+    options[:compression] = 'default' if options[:compression].nil?
+  end
 end.parse!
 
 # check input
@@ -70,6 +75,15 @@ if options[:backup]
   end
   if options[:save_dir] == false
     puts "\n[ INFO ] ".light_blue + "you must specify --save-dir"
+    puts
+    puts $opts
+    puts
+    exit(1)
+  end
+
+  compression_options = ['none', 'default', 'best']
+  if ! compression_options.include? options[:compression]
+    puts "\n[ INFO ] ".light_blue + "supported values for --compression are [none, default, best]"
     puts
     puts $opts
     puts
@@ -299,13 +313,13 @@ def backup(vm)
   File.open(checksum_file, 'w') { |f|
     f.puts checksum }
 
-  $zip.create_zip(zip_file,checksum_file)
+  $zip.create_zip(zip_file,checksum_file, $options[:compression])
   #File.delete(checksum_file)
 
   # Add snapshots XML files to the ZIP file
   if $options[:with_snapshots]
     for s in $snapshot_paths
-      $zip.create_zip(zip_file, s)
+      $zip.create_zip(zip_file, s, $options[:compression])
       File.delete(s)
     end
 
@@ -315,11 +329,11 @@ def backup(vm)
   vm_xml_file = "/tmp/#{vm}.xml"
   cmd  = "virsh dumpxml #{vm} > #{vm_xml_file}"
   system(cmd)
-  $zip.create_zip(zip_file, vm_xml_file)
+  $zip.create_zip(zip_file, vm_xml_file, $options[:compression])
   File.delete(vm_xml_file)
 
   for disk in disks_to_backup
-    $zip.create_zip(zip_file,disk)
+    $zip.create_zip(zip_file,disk, $options[:compression])
   end
 
   if $vm_.vm_state?(vm) == "paused"

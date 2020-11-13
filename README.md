@@ -96,6 +96,23 @@ ruby virt-backup.rb --restore \
  --restore-dir /var/lib/libvirt/images/backup/
 ```
 
+
+
+* Backup without compression
+
+> supported  (--compression) values are:  default, none, best
+
+```bash
+ruby virt-backup.rb --backup \
+ --with-snapshots \
+ --original-vm kubernetes-master \
+ --system-disk-only \
+ --compression none
+ --save-dir /var/lib/libvirt/images/backup/
+```
+
+
+
 ## Example screenshoots
 
 
@@ -137,6 +154,7 @@ ruby /root/virt-backup/virt-backup.rb \
 * Fix: Error if snapshot name has a space ✔️
 * Fix: Restore snapshot --> stable now ✔️
 * Update: Zip 64 bit is added (the support to backup & restore large disk files) ✔️
+* Add command-line control to the compression level ✔️
 
 ---
 
