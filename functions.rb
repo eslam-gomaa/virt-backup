@@ -95,7 +95,7 @@ end
         exit(1)
       end
       info = {}
-      info[:disks] = File.readlines(xml.path).grep(/source file=/).collect {|disk| disk.strip.gsub(/source file=/, '').gsub(/<'/,'').gsub("'/>", '').gsub(/ index=[0-9]+/, '')}
+      info[:disks] = File.readlines(xml.path).grep(/source file=/).collect {|disk| disk.strip.gsub(/source file=/, '').gsub(/<'/,'').gsub("'/>", '').gsub(/ index=[0-9]+/, '').gsub(/'\sindex='[0-9]+/, '')}
       info[:disks_number] = File.readlines(xml.path).grep(/source file=/).collect {|disk| disk.strip.gsub(/source file=/, '').gsub(/<'/,'').gsub("'/>", '')}.count
 
       def disks_missing?(disks)
