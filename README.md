@@ -47,16 +47,21 @@ cd virt-backup
 ruby virt-backup.rb --help
 ```
 
+> To install Ruby 2.7 on **Debian 11 (Bullseye)** you can follow the steps contained in the 
+[install_ruby_2.7_Debian_11.md](docs/install_ruby_2.7_Debian_11.md) document. 
+
 ---
 
 #### Installation test result
 
 | Distro         | Test Result |
 | -------------- | ----------- |
-| `Ubuntu 16.04` | ✔️           |
-| `Ubuntu 18.04` | ✔️           |
-| `Centos 7`     | ✔️           |
+| `Ubuntu 16.04` | 🟢          |
+| `Ubuntu 18.04` | 🟢          |
+| `Centos 7`     | 🟢          |
+| `Debian 11`    | 🟠          |
 
+**Note for Debian users:** backups using the `--with-snapshots`, or `-s` option will succeed but restoring the backup fails. [See this issue](https://github.com/eslam-gomaa/virt-backup/issues/4) for more details on the matter. For now, make sure you omit the with snapshots option flag when creating a backup. Everything else works perfectly.
 
 ---
 
