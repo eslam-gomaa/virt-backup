@@ -118,7 +118,7 @@ ruby virt-backup.rb --backup \
 
 
 
-## Example screenshoots
+## Example screenshots
 
 
 
@@ -142,7 +142,7 @@ ruby /root/virt-backup/virt-backup.rb \
 ruby /root/virt-backup/virt-backup.rb \
   --restore \
   --with-snapshots \
-  --backup-file /var/lib/libvirt/images/backup-11/snap23.zip 
+  --backup-file /var/lib/libvirt/images/backup-11/snap23.zip \
   --restore-dir /var/lib/libvirt/images
 ```
 
