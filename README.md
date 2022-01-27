@@ -55,9 +55,9 @@ ruby virt-backup.rb --help
 
 | Distro         | Test Result |
 | -------------- | ----------- |
-| `Ubuntu 16.04` |https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_16_04|
-| `Ubuntu 18.04` |https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_18_04|
-| `Centos 7`     |https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_20_04|
+| `Ubuntu 16.04` |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_16_04)|
+| `Ubuntu 18.04` |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_18_04)|
+| `Centos 7`     |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_20_04)|
 | `Debian 11`    | 🟠          |
 | `....`     | 🟢          |
 | `....`     | 🟢          |
