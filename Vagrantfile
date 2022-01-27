@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
     # centos_7.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
     centos_7.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     centos_7.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_centos7.sh"
-    centos_7.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos.sh"
+    centos_7.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos7.sh"
     centos_7.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     centos_7.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     centos_7.vm.provider :libvirt do |libvirt|
@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
     # centos_8.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
     centos_8.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     centos_8.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_centos8.sh"
-    centos_8.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos.sh"
+    centos_8.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos8.sh"
     centos_8.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     centos_8.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     centos_8.vm.provider :libvirt do |libvirt|
@@ -104,7 +104,7 @@ Vagrant.configure("2") do |config|
     # fedora34.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
     fedora34.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     fedora34.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_centos8.sh"
-    fedora34.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos.sh"
+    fedora34.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos8.sh"
     fedora34.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     fedora34.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     fedora34.vm.provider :libvirt do |libvirt|
