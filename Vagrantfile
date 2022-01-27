@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
     ubuntu_18_04.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     ubuntu_18_04.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_ubuntu.sh"
     ubuntu_18_04.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
-    ubuntu_18_04.vm.provision "Install Ruby", type: "shell", path: "scripts/install_virt-backup.sh"
+    ubuntu_18_04.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     ubuntu_18_04.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     ubuntu_18_04.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
     ubuntu_16_04.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     ubuntu_16_04.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_ubuntu.sh"
     ubuntu_16_04.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
-    ubuntu_16_04.vm.provision "Install Ruby", type: "shell", path: "scripts/install_virt-backup.sh"
+    ubuntu_16_04.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     ubuntu_16_04.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     ubuntu_16_04.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
     ubuntu_20_04.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     ubuntu_20_04.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_ubuntu.sh"
     ubuntu_20_04.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
-    ubuntu_20_04.vm.provision "Install Ruby", type: "shell", path: "scripts/install_virt-backup.sh"
+    ubuntu_20_04.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     ubuntu_20_04.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     ubuntu_20_04.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
@@ -64,6 +64,56 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define "centos_7" do |centos_7|
+    centos_7.vm.hostname = "centos-7" 
+    centos_7.vm.box = "generic/centos7"
+    # centos_7.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
+    centos_7.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
+    centos_7.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_centos7.sh"
+    centos_7.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos.sh"
+    centos_7.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
+    centos_7.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    centos_7.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = "#{memory}"
+      libvirt.title  = "centos_7"
+      libvirt.nested = true
+    end
+  end
+
+  config.vm.define "centos_8" do |centos_8|
+    centos_8.vm.hostname = "centos-8" 
+    centos_8.vm.box = "generic/centos8"
+    # centos_8.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
+    centos_8.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
+    centos_8.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_centos8.sh"
+    centos_8.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos.sh"
+    centos_8.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
+    centos_8.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    centos_8.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = "#{memory}"
+      libvirt.title  = "centos_8"
+      libvirt.nested = true
+    end
+  end
+
+  config.vm.define "fedora34" do |fedora34|
+    fedora34.vm.hostname = "fedora34" 
+    fedora34.vm.box = "generic/fedora34"
+    # fedora34.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
+    fedora34.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
+    fedora34.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_centos8.sh"
+    fedora34.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos.sh"
+    fedora34.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
+    fedora34.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    fedora34.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = "#{memory}"
+      libvirt.title  = "fedora34"
+      libvirt.nested = true
+    end
+  end
 
 
 end
