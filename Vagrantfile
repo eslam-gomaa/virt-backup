@@ -115,5 +115,38 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define "debian10" do |debian10|
+    debian10.vm.hostname = "Debian 10" 
+    debian10.vm.box = "generic/debian10"
+    # debian10.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
+    debian10.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
+    debian10.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_ubuntu.sh"
+    debian10.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
+    debian10.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
+    debian10.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    debian10.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = "#{memory}"
+      libvirt.title  = "debian10"
+      libvirt.nested = true
+    end
+  end
+
+  config.vm.define "debian11" do |debian11|
+    debian11.vm.hostname = "Debian 11" 
+    debian11.vm.box = "generic/debian11"
+    # debian11.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
+    debian11.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
+    debian11.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_ubuntu.sh"
+    debian11.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
+    debian11.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
+    debian11.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    debian11.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 2
+      libvirt.memory = "#{memory}"
+      libvirt.title  = "debian11"
+      libvirt.nested = true
+    end
+  end
 
 end
