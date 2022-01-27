@@ -42,7 +42,7 @@ module Snapshot
 
       need_to_start = running.concat paused
       vm_ = VM.new(vm)
-      if need_to_start.count > 1
+      if need_to_start.count >= 1
         puts "[ INFO ] ".light_blue + "(#{need_to_start.count}) snapshots in RUNNING/PAUSED state detected".gray
         if vm_.vm_state? == 'shut off'
           puts "[ INFO ] ".light_blue + "Starting the VM: (#{vm})"
