@@ -7,3 +7,6 @@ apt -y install git
 systemctl start libvirtd
 systemctl enable libvirtd
 systemctl is-active libvirtd
+
+virsh net-start default
+virsh net-autostart default
