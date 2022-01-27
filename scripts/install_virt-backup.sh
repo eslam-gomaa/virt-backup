@@ -12,7 +12,6 @@ gem uninstall zip # Need to be removed if installed
 gem install rubyzip
 
 cd /var
-apt -y install git
 git clone https://github.com/eslam-gomaa/virt-backup.git
 # alias virt-backup="ruby /var/virt-backup/virt-backup.rb"
 # virt-backup -h
