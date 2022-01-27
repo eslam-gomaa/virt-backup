@@ -123,7 +123,7 @@ Vagrant.configure("2") do |config|
     debian10.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_debian.sh"
     debian10.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
     debian10.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
-    debian10.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    # debian10.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     debian10.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
       libvirt.memory = "#{memory}"
@@ -140,7 +140,7 @@ Vagrant.configure("2") do |config|
     debian11.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_debian.sh"
     debian11.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_ubuntu.sh"
     debian11.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
-    debian11.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
+    # debian11.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     debian11.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 2
       libvirt.memory = "#{memory}"
