@@ -53,6 +53,8 @@ ruby virt-backup.rb --help
 
 #### Installation test result
 
+📌 The tests are done by an automated Jenkins [pipeline](https://github.com/eslam-gomaa/virt-backup/blob/master/Jenkinsfile)
+
 | Distro         | Test Result |
 | -------------- | ----------- |
 | `Ubuntu 16.04` |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_16_04)|
