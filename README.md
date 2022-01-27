@@ -57,11 +57,13 @@ ruby virt-backup.rb --help
 | -------------- | ----------- |
 | `Ubuntu 16.04` |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_16_04)|
 | `Ubuntu 18.04` |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_18_04)|
-| `Centos 7`     |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_20_04)|
-| `Debian 11`    | 🟠          |
-| `....`     | 🟢          |
-| `....`     | 🟢          |
-| `....`     | 🟢          |
+| `Ubuntu 20.04` |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=ubuntu_20_04)|
+| `CentOS 7`    |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=centos_7)|
+| `CentOS 8`    |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=centos_8)|
+| `fedora-34`   |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=fedora34)|
+| `Debian 10`   |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=debian10)|
+| `Debian 11`   |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=debian11)|
+
 
 **Note for Debian users:** backups using the `--with-snapshots`, or `-s` option will succeed but restoring the backup fails. [See this issue](https://github.com/eslam-gomaa/virt-backup/issues/4) for more details on the matter. For now, make sure you omit the with snapshots option flag when creating a backup. Everything else works perfectly.
 
