@@ -104,7 +104,7 @@ Vagrant.configure("2") do |config|
     # fedora34.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
     fedora34.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
     fedora34.vm.provision "Install KVM", type: "shell", path: "scripts/install_kvm_fedora34.sh"
-    fedora34.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_fedora34.sh"
+    fedora34.vm.provision "Install Ruby", type: "shell", path: "scripts/install_ruby_centos7.sh"
     fedora34.vm.provision "Install virt-backup", type: "shell", path: "scripts/install_virt-backup.sh"
     fedora34.vm.provision "Run Tests", type: "shell", path: "scripts/test.sh"
     fedora34.vm.provider :libvirt do |libvirt|
@@ -116,7 +116,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "debian10" do |debian10|
-    debian10.vm.hostname = "Debian 10" 
+    debian10.vm.hostname = "debian-10" 
     debian10.vm.box = "generic/debian10"
     # debian10.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
     debian10.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
@@ -133,7 +133,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "debian11" do |debian11|
-    debian11.vm.hostname = "Debian 11" 
+    debian11.vm.hostname = "debian-11" 
     debian11.vm.box = "generic/debian11"
     # debian11.vm.network :public_network, :dev => "virbr0", :mode => "bridge", :type => "bridge", :ip => "192.168.122.40"
     debian11.vm.provision "enable nested virtualization", type: "shell", path: "scripts/enable_nested_virtualization.sh"
