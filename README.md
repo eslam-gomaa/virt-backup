@@ -160,6 +160,31 @@ ruby /root/virt-backup/virt-backup.rb \
 
 
 
+🚩 Backup
+
+```bash
+mkdir /var/lib/libvirt/images/backup/
+
+virt-backup --backup \
+  --with-snapshots \
+  --original-vm cirros \
+  --save-dir /var/lib/libvirt/images/backup/
+
+```
+
+
+
+🚩 Restore
+
+```bash
+virt-backup --restore \
+  --with-snapshots \
+  --backup-file /var/lib/libvirt/images/backup/cirros.zip \
+  --restore-dir /var/lib/libvirt/images/
+```
+
+
+
 
 
 ### Updates & Fixes
