@@ -16,7 +16,7 @@ Fully backup & restore your KVM Virtual Machines
 
 ## Install
 
-At least Ruby Version `2.4` is needed, Here is how to [install Ruby 2.5 on different distributions](../docs/Install_Ruby.md)
+At least Ruby Version `2.4` is needed, Here is how to [install Ruby 2.5 on different distributions](docs/Install_Ruby.md)
 
 > Just install the gems used and you're good to go *(Assuming that you have KVM installed)*
 
@@ -48,7 +48,7 @@ ruby virt-backup.rb --help
 
 ---
 
-#### Installation test result
+##### Installation test result
 
 📌 The tests are done by an automated Jenkins [pipeline](https://github.com/eslam-gomaa/virt-backup/blob/master/Jenkinsfile)
 
@@ -64,7 +64,8 @@ ruby virt-backup.rb --help
 | `Debian 11`   |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=debian11)|
 
 
-> Note for Debian 11 Users (Consider this opened issue)
+> ##### Note for Debian 11 Users (Consider this opened issue)
+> 
 > ---
 > **Note for Debian users:** backups using the `--with-snapshots`, or `-s` option will succeed but restoring the backup fails. [See this issue](https://github.com/eslam-gomaa/virt-backup/issues/4) for more details on the matter. For now, make sure you omit the with snapshots option flag when creating a backup. Everything else works perfectly.
 
