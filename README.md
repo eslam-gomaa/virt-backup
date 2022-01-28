@@ -131,35 +131,6 @@ ruby virt-backup.rb --backup \
 ## Example screenshots
 
 
-
-* Backup
-
-```bash
-ruby /root/virt-backup/virt-backup.rb \
-  --backup \
-  --original-vm snap23 \
-  --save-dir /var/lib/libvirt/images/backup-11/ \
-  --with-snapshots
-```
-
-![](https://i.imgur.com/msxoiYc.png)
-
-
-
-* Restore
-
-```bash
-ruby /root/virt-backup/virt-backup.rb \
-  --restore \
-  --with-snapshots \
-  --backup-file /var/lib/libvirt/images/backup-11/snap23.zip \
-  --restore-dir /var/lib/libvirt/images
-```
-
-![Imgur](https://i.imgur.com/Uoh7Zpq.png)
-
-
-
 🚩 Backup
 
 ```bash
@@ -169,8 +140,10 @@ virt-backup --backup \
   --with-snapshots \
   --original-vm cirros \
   --save-dir /var/lib/libvirt/images/backup/
-
 ```
+
+![image](https://user-images.githubusercontent.com/33789516/151503493-d694cdc4-04bd-4632-a57a-e493187ed875.png)
+
 
 
 
@@ -183,6 +156,11 @@ virt-backup --restore \
   --restore-dir /var/lib/libvirt/images/
 ```
 
+![image](https://user-images.githubusercontent.com/33789516/151503844-135d283b-1400-411e-9b5b-deaf54131c47.png)
+
+<br>
+
+<br>
 
 
 
