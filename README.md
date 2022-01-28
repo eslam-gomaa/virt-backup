@@ -129,6 +129,7 @@ ruby virt-backup.rb --backup \
 
 
 ## Example screenshots
+Assuming you have installed [this way](https://github.com/eslam-gomaa/virt-backup#prefered-way-to-install)
 
 
 🚩 Backup
