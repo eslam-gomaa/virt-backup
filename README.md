@@ -35,7 +35,7 @@ cd virt-backup
 ruby virt-backup.rb --help
 ```
 
-> ### Prefered way to install
+> ##### Prefered way to install
 >---
 > ```bash
 > cd /var
@@ -48,7 +48,7 @@ ruby virt-backup.rb --help
 
 ---
 
-##### Installation test result
+### Test
 
 📌 The tests are done by an automated Jenkins [pipeline](https://github.com/eslam-gomaa/virt-backup/blob/master/Jenkinsfile)
 
@@ -63,6 +63,7 @@ ruby virt-backup.rb --help
 | `Debian 10`   |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=debian10)|
 | `Debian 11`   |![](https://jenkins.demo.devops-caffe.com/jenkins/buildStatus/icon?job=virt-backup%2Fmaster&config=debian11)|
 
+<br>
 
 > ##### Note for Debian 11 Users (Consider this opened issue)
 > 
