@@ -30,7 +30,7 @@ gem install rubyzip
 ```
 
 ```bash
-git clone https://github.com/Eslam-Naser/virt-backup.git
+git clone https://github.com/eslam-gomaa/virt-backup.git
 cd virt-backup
 ruby virt-backup.rb --help
 ```
@@ -39,7 +39,7 @@ ruby virt-backup.rb --help
 >---
 > ```bash
 > cd /var
-> git clone https://github.com/Eslam-Naser/virt-backup.git
+> git clone https://github.com/eslam-gomaa/virt-backup.git
 > alias virt-backup="ruby /var/virt-backup/virt-backup.rb"
 > # Put it in ~/.bashrc for persistence.
 > # echo 'alias virt-backup="ruby /var/virt-backup/virt-backup.rb"' >> ~/.bashrc
