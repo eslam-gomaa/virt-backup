@@ -65,10 +65,9 @@ ruby virt-backup.rb --help
 
 <br>
 
-> ##### Note for Debian 11 Users (Consider this opened [issue](https://github.com/eslam-gomaa/virt-backup/issues/4))
-> 
-> ---
-> **Note for Debian users:** backups using the `--with-snapshots`, or `-s` option will succeed but restoring the backup fails. [See this issue](https://github.com/eslam-gomaa/virt-backup/issues/4) for more details on the matter. For now, make sure you omit the with snapshots option flag when creating a backup. Everything else works perfectly.
+> #### Note for **`Debian 11`** Users (Consider that [issue](https://github.com/eslam-gomaa/virt-backup/issues/4))
+> It works fine on my tests, but if you'll use the `--with-snapshots` or `-s` option make sure to test to restore your VM
+
 
 <br>
 
