@@ -11,8 +11,15 @@ pipeline {
   agent { label 'kvm_lab' }
   stages {
     stage('Clone') {
+      when { branch "hotfix" }
       steps {
-        git(url: 'https://github.com/eslam-gomaa/virt-backup.git', branch: 'master', credentialsId: 'github_token')
+        script {
+          checkout([
+                $class: 'GitSCM',
+                branches: [[name: 'origin/master']],
+                userRemoteConfigs: [[url: 'https://github.com/eslam-gomaa/virt-backup.git']]
+                ])
+        }
       }
     }
     stage('Post clone step') {
