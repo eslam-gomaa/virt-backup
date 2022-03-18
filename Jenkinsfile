@@ -11,18 +11,21 @@ pipeline {
   agent { label 'kvm_lab' }
   stages {
     stage('Clone') {
-      when { branch "hotfix" }
+      // when { branch "hotfix" }
+      // Match branches that begin with 'feature/*' OR 'hotfix/*'
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           checkout([
                 $class: 'GitSCM',
-                branches: [[name: 'origin/master']],
+                branches: [[name: 'origin/feature/option-to-ignore-iso-images']],
                 userRemoteConfigs: [[url: 'https://github.com/eslam-gomaa/virt-backup.git']]
                 ])
         }
       }
     }
     stage('Post clone step') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           echo "Changing the owner & permissions of .vagrant directory"
@@ -41,6 +44,7 @@ pipeline {
       }
     }
     stage('Destroy old test VMs') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           echo "Double check that old test vm's are cleared"
@@ -57,6 +61,7 @@ pipeline {
       }
     }
     stage('Download boxs that don\'t exist') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         // Add any new box here to download it before running the tests
         // to prevent a BUG that may prevent downloading the box from within the pipeline.
@@ -76,6 +81,7 @@ pipeline {
     }
     
     stage('Test Ubuntu 18.04') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           ubuntu_18_04.setStatus('running')
@@ -95,6 +101,7 @@ pipeline {
       }
     }
     stage('Test Ubuntu 16.04') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           ubuntu_16_04.setStatus('running')
@@ -114,6 +121,7 @@ pipeline {
       }
     }
     stage('Test Ubuntu 20.04') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           ubuntu_20_04.setStatus('running')
@@ -133,6 +141,7 @@ pipeline {
       }
     }
     stage('Test CentOS 7') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           centos_7.setStatus('running')
@@ -152,6 +161,7 @@ pipeline {
       }
     }
     stage('Test CentOS 8') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           centos_8.setStatus('running')
@@ -171,6 +181,7 @@ pipeline {
       }
     }
     stage('Test Fedora 34') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           fedora34.setStatus('running')
@@ -190,6 +201,7 @@ pipeline {
       }
     }
     stage('Test Debian 10') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           debian10.setStatus('running')
@@ -209,6 +221,7 @@ pipeline {
       }
     }
     stage('Test Debian 11') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           debian11.setStatus('running')
@@ -228,6 +241,7 @@ pipeline {
       }
     }
     stage('Post pipeline: clear cached vagrant boxes') {
+      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           echo "Useful to save disk space"
