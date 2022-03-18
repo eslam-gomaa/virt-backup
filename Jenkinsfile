@@ -12,7 +12,7 @@ pipeline {
   stages {
     stage('Clone') {
       steps {
-        git(url: 'https://github.com/eslam-gomaa/virt-backup.git', branch: 'master', credentialsId: 'github_id')
+        git(url: 'https://github.com/eslam-gomaa/virt-backup.git', branch: 'master', credentialsId: 'github_jenkins_token')
       }
     }
     stage('Post clone step') {
