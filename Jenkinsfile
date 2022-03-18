@@ -13,7 +13,7 @@ pipeline {
     stage('Clone') {
       // when { branch "hotfix" }
       // Match branches that begin with 'feature/*' OR 'hotfix/*'
-      when { expression { BRANCH_NAME ==~ /hotfix\/.*|feature\/.*/ } }
+      when { expression { BRANCH ==~ /hotfix\/.*|feature\/.*/ } }
       steps {
         script {
           checkout([
