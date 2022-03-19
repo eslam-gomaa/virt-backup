@@ -182,7 +182,7 @@ virt-backup --restore \
 ***Note***  
 The script does the job perfectly, However to add more features easily the code needs to be refactored,
 
-that will be done if at least 2 new features are requested
+And since that would take few weeks, at least 3 features/enhancements are should be requested first.
 
 <br>
 
