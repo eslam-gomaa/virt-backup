@@ -4,6 +4,7 @@ Fully backup & restore your KVM Virtual Machines
 
 ---
 
+
 ## `virt-backup` Features:
 
 * Ability to backup all the VM's disks or only system disk
@@ -176,6 +177,16 @@ virt-backup --restore \
 
 ---
 
+<br>
+
+***Note***  
+The script does the job perfectly, However to add more features easily the code needs to be refactored,
+
+that will be done if at least 2 new features are requested
+
+<br>
+
+---
 
 
 Thank you
